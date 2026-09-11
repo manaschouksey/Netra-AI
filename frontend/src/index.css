@@ -1,71 +1,190 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: 'Space Grotesk', 'Inter', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-display: 'Rubik', -apple-system, system-ui, sans-serif;
+  --font-body: 'Rubik', -apple-system, system-ui, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-mono: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
 
-  --color-bg-void: #070B14;
-  --color-bg-base: #0B1120;
-  --color-bg-panel: #101827;
-  --color-bg-panel-raised: #141D30;
-  --color-bg-inset: #0A0F1C;
+  /* Colors strictly from DESIGN.md */
+  --color-primary: #150f23;
+  --color-ink-deep: #1f1633;
+  --color-on-primary: #ffffff;
+  --color-accent-lime: #c2ef4e;
+  --color-accent-pink: #fa7faa;
+  --color-accent-violet: #6a5fc1;
+  --color-accent-violet-deep: #422082;
+  --color-accent-violet-mid: #79628c;
+  --color-surface-canvas-dark: #1f1633;
+  --color-surface-canvas-light: #ffffff;
+  --color-surface-night: #150f23;
+  --color-surface-press-light: #f0f0f0;
+  --color-surface-press-stronger: #efefef;
+  --color-hairline-violet: #362d59;
+  --color-hairline-cool: #cfcfdb;
+  --color-hairline-cloud: #e5e7eb;
+  --color-ink: #1f1633;
+  --color-ink-press: #1a1a1a;
+  --color-on-dark-muted: #bdb8c0;
+  --color-on-dark-faint: rgba(255, 255, 255, 0.18);
+  --color-ring-focus: #9dc1f5;
 
-  --color-border-hairline: #1D2A3F;
-  --color-border-soft: #16202F;
+  /* Semantic UI Aliases mapping cleanly to DESIGN.md */
+  --color-bg-base: #1f1633;               /* surface-canvas-dark */
+  --color-bg-panel: #150f23;              /* surface-night */
+  --color-bg-panel-raised: #1f1633;       /* ink-deep */
+  --color-bg-inset: #150f23;              /* surface-night */
+  --color-border-hairline: #362d59;       /* hairline-violet */
+  --color-border-soft: #362d59;           /* hairline-violet */
 
-  --color-text-primary: #E7ECF5;
-  --color-text-secondary: #93A2BC;
-  --color-text-muted: #5A6B87;
+  --color-text-primary: #ffffff;          /* on-primary */
+  --color-text-secondary: #bdb8c0;        /* on-dark-muted */
+  --color-text-muted: #79628c;            /* accent-violet-mid */
 
-  --color-accent-cyan: #29D6E0;
-  --color-accent-cyan-dim: #12545A;
-  --color-accent-cyan-glow: rgba(41, 214, 224, 0.18);
-
-  --color-risk-low: #33D6A0;
-  --color-risk-low-dim: rgba(51, 214, 160, 0.14);
-  --color-risk-mid: #F2B84B;
-  --color-risk-mid-dim: rgba(242, 184, 75, 0.14);
-  --color-risk-high: #F2495C;
-  --color-risk-high-dim: rgba(242, 73, 92, 0.14);
+  /* Semantic verification status tokens using DESIGN.md palette */
+  --color-risk-low: #c2ef4e;              /* accent-lime */
+  --color-risk-low-dim: rgba(194, 239, 78, 0.14);
+  --color-risk-mid: #79628c;              /* accent-violet-mid */
+  --color-risk-mid-dim: rgba(121, 98, 140, 0.18);
+  --color-risk-high: #fa7faa;             /* accent-pink */
+  --color-risk-high-dim: rgba(250, 127, 170, 0.14);
 }
 
 html, body {
-  background: var(--color-bg-base);
-  color: var(--color-text-primary);
+  background: var(--color-surface-canvas-dark);
+  color: var(--color-on-primary);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
 }
 
-#root { min-height: 100vh; }
-
-::selection { background: var(--color-accent-cyan-glow); }
-
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--color-border-hairline); border-radius: 4px; }
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-  }
+#root {
+  min-height: 100vh;
 }
 
-:focus-visible {
-  outline: 2px solid var(--color-accent-cyan);
-  outline-offset: 2px;
+::selection {
+  background: var(--color-accent-lime);
+  color: var(--color-ink-deep);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-surface-canvas-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-hairline-violet);
   border-radius: 4px;
 }
 
-@keyframes scan {
-  0% { top: 6%; opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { top: 92%; opacity: 0; }
+:focus-visible {
+  outline: 2px solid var(--color-ring-focus);
+  outline-offset: 2px;
+  border-radius: 6px;
 }
-.animate-scan { animation: scan 2.8s ease-in-out infinite; }
 
-@keyframes spin-slow { to { transform: rotate(360deg); } }
-.animate-spin-slow { animation: spin-slow 6s linear infinite; transform-origin: center; }
+/* Button Components as specified in DESIGN.md */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.14;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+  border-radius: 8px;
+  padding: 12px 16px;
+  transition: background-color 0.15s ease;
+  cursor: pointer;
+}
+.btn-primary:hover,
+.btn-primary:active {
+  background-color: var(--color-surface-press-stronger);
+  color: var(--color-ink-press);
+}
+
+.btn-inverted {
+  background-color: var(--color-on-primary);
+  color: var(--color-ink-deep);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.14;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+  border-radius: 8px;
+  padding: 12px 16px;
+  box-shadow: rgba(0, 0, 0, 0.08) 0 2px 8px 0;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+  cursor: pointer;
+}
+.btn-inverted:hover,
+.btn-inverted:active {
+  background-color: var(--color-surface-press-light);
+  color: var(--color-ink-press);
+}
+.btn-inverted:disabled {
+  background-color: var(--color-hairline-cloud);
+  color: var(--color-on-dark-muted);
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn-ghost-on-dark {
+  background-color: var(--color-on-dark-faint);
+  color: var(--color-on-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.14;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+  border-radius: 12px;
+  padding: 8px 16px;
+  transition: background-color 0.15s ease;
+  cursor: pointer;
+}
+.btn-ghost-on-dark:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Signature Highlight Chip from DESIGN.md */
+.chip-lime-keyword {
+  background-color: var(--color-accent-lime);
+  color: var(--color-ink-deep);
+  border-radius: 4px;
+  padding: 0 10px;
+  font-weight: 700;
+  display: inline-block;
+  letter-spacing: 0;
+}
+
+/* Card Surfaces from DESIGN.md */
+.card-sentry-dark {
+  background-color: var(--color-surface-night);
+  border: 1px solid var(--color-hairline-violet);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.pill-neutral-dark {
+  background-color: var(--color-surface-night);
+  border: 1px solid var(--color-hairline-violet);
+  color: var(--color-on-primary);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.code-block {
+  background-color: var(--color-surface-night);
+  border: 1px solid var(--color-hairline-violet);
+  color: var(--color-on-primary);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  border-radius: 8px;
+  padding: 16px;
+}

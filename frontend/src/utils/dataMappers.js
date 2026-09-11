@@ -244,17 +244,17 @@ export function mapRiskDistributionData(verificationResult) {
     {
       name: 'Validation',
       value: Math.round(breakdown.validation_risk ?? 0),
-      color: '#33D6A0',
+      color: '#c2ef4e',
     },
     {
       name: 'Tampering',
       value: Math.round(breakdown.tampering_risk ?? 0),
-      color: '#F2B84B',
+      color: '#79628c',
     },
     {
       name: 'Face Match',
       value: Math.round(breakdown.face_match_risk ?? 0),
-      color: '#F2495C',
+      color: '#fa7faa',
     },
   ];
 }

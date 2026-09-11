@@ -11,48 +11,48 @@ export default function DocumentUploadSection({
   error,
 }) {
   return (
-    <section className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
+    <section className="bg-[#150f23] border border-[#362d59] rounded-xl p-6">
       <div className="mb-5">
-        <h2 className="text-lg font-semibold text-text-primary">
+        <h2 className="text-[18px] font-semibold text-[#ffffff] m-0">
           Government ID Verification
         </h2>
-        <p className="text-sm text-text-secondary mt-1">
+        <p className="text-[13px] text-[#bdb8c0] mt-1">
           Upload a government document and a reference face to perform the complete verification pipeline.
         </p>
       </div>
 
       <div className="grid grid-cols-2 gap-4 max-[800px]:grid-cols-1">
         {/* DOCUMENT INPUT */}
-        <div className="rounded-lg border border-white/10 p-4 bg-white/[0.02]">
-          <label className="block text-sm font-medium text-text-primary mb-2">
+        <div className="rounded-md border border-[#362d59] p-4 bg-[#1f1633]">
+          <label className="block text-xs font-semibold uppercase tracking-[0.2px] text-[#79628c] mb-2.5">
             Government Document
           </label>
           <input
             type="file"
             accept={ALLOWED_DOC_EXTENSIONS}
             onChange={onDocumentChange}
-            className="block w-full text-sm text-text-secondary file:mr-4 file:rounded-md file:border-0 file:px-4 file:py-2 file:bg-white/10 file:text-text-primary hover:file:bg-white/20 cursor-pointer"
+            className="block w-full text-xs text-[#bdb8c0] file:mr-3 file:rounded-md file:border file:border-[#362d59] file:px-3 file:py-1.5 file:bg-[#150f23] file:text-[#ffffff] file:text-xs file:font-semibold hover:file:bg-[#3f3849] cursor-pointer"
           />
           {documentFile && (
-            <div className="mt-3 text-xs text-text-secondary">
+            <div className="mt-2 text-xs font-mono text-[#c2ef4e]">
               Selected: {documentFile.name}
             </div>
           )}
         </div>
 
         {/* LIVE PHOTO INPUT */}
-        <div className="rounded-lg border border-white/10 p-4 bg-white/[0.02]">
-          <label className="block text-sm font-medium text-text-primary mb-2">
+        <div className="rounded-md border border-[#362d59] p-4 bg-[#1f1633]">
+          <label className="block text-xs font-semibold uppercase tracking-[0.2px] text-[#79628c] mb-2.5">
             Reference / Live Face
           </label>
           <input
             type="file"
             accept={ALLOWED_FACE_EXTENSIONS}
             onChange={onLivePhotoChange}
-            className="block w-full text-sm text-text-secondary file:mr-4 file:rounded-md file:border-0 file:px-4 file:py-2 file:bg-white/10 file:text-text-primary hover:file:bg-white/20 cursor-pointer"
+            className="block w-full text-xs text-[#bdb8c0] file:mr-3 file:rounded-md file:border file:border-[#362d59] file:px-3 file:py-1.5 file:bg-[#150f23] file:text-[#ffffff] file:text-xs file:font-semibold hover:file:bg-[#3f3849] cursor-pointer"
           />
           {livePhotoFile && (
-            <div className="mt-3 text-xs text-text-secondary">
+            <div className="mt-2 text-xs font-mono text-[#c2ef4e]">
               Selected: {livePhotoFile.name}
             </div>
           )}
@@ -61,8 +61,8 @@ export default function DocumentUploadSection({
 
       {/* ERROR MESSAGE */}
       {error && (
-        <div className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
-          ❌ {error}
+        <div className="mt-4 rounded-md border border-[#fa7faa] bg-[#150f23] px-4 py-3 text-xs text-[#fa7faa]">
+          {error}
         </div>
       )}
 
@@ -72,7 +72,7 @@ export default function DocumentUploadSection({
           type="button"
           onClick={onVerify}
           disabled={isVerifying || !documentFile || !livePhotoFile}
-          className="rounded-lg bg-white px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-40"
+          className="btn-inverted"
         >
           {isVerifying ? 'Analyzing...' : 'Start Verification'}
         </button>
@@ -80,3 +80,4 @@ export default function DocumentUploadSection({
     </section>
   );
 }
+

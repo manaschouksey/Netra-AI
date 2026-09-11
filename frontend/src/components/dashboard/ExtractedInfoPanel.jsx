@@ -1,11 +1,6 @@
 import Panel from '../common/Panel';
 import { extractedInfo } from '../../data/mockData';
 
-/**
- * Shows the real OCR output returned by the backend
- * (services/ocr.py) once a document has been verified.
- * Falls back to mock rows before any scan has run.
- */
 export default function ExtractedInfoPanel({ data }) {
   const rows = data ?? extractedInfo;
 
@@ -15,13 +10,14 @@ export default function ExtractedInfoPanel({ data }) {
         {rows.map((row, i) => (
           <div
             key={row.field}
-            className={`flex items-baseline justify-between gap-3 py-2 ${i < rows.length - 1 ? 'border-b border-border-soft' : ''}`}
+            className={`flex items-baseline justify-between gap-3 py-2.5 ${i < rows.length - 1 ? 'border-b border-[#362d59]' : ''}`}
           >
-            <dt className="text-[11.5px] text-text-muted shrink-0">{row.field}</dt>
-            <dd className="m-0 font-mono text-[12.5px] text-text-primary text-right break-words">{row.value}</dd>
+            <dt className="text-xs text-[#79628c] shrink-0">{row.field}</dt>
+            <dd className="m-0 font-mono text-xs text-[#ffffff] text-right break-words">{row.value}</dd>
           </div>
         ))}
       </dl>
     </Panel>
   );
 }
+

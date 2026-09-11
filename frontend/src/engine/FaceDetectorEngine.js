@@ -180,19 +180,19 @@ export default class FaceDetectorEngine {
     faces.forEach((face, index) => {
       const { x, y, width, height } = face.box;
 
-      ctx.strokeStyle = "#22c55e";
+      ctx.strokeStyle = "#c2ef4e";
       ctx.lineWidth = 2;
       ctx.strokeRect(x, y, width, height);
 
       const label = `Face ${index + 1} (${Math.round(face.confidence * 100)}%)`;
-      ctx.font = "14px Segoe UI, Arial, sans-serif";
+      ctx.font = "600 12px Rubik, -apple-system, sans-serif";
       const textWidth = ctx.measureText(label).width;
 
-      ctx.fillStyle = "rgba(34, 197, 94, 0.85)";
-      ctx.fillRect(x, y > 18 ? y - 18 : y, textWidth + 8, 18);
+      ctx.fillStyle = "#c2ef4e";
+      ctx.fillRect(x, y > 20 ? y - 20 : y, textWidth + 8, 20);
 
-      ctx.fillStyle = "#052e16";
-      ctx.fillText(label, x + 4, y > 18 ? y - 5 : y + 13);
+      ctx.fillStyle = "#1f1633";
+      ctx.fillText(label, x + 4, y > 20 ? y - 6 : y + 14);
     });
   }
 

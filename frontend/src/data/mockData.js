@@ -85,7 +85,8 @@ export const recentHistory = [
 ];
 
 export const riskDistribution = [
-  { name: 'Low', value: 68, color: '#33D6A0' },
-  { name: 'Moderate', value: 24, color: '#F2B84B' },
-  { name: 'High', value: 8, color: '#F2495C' },
+  { name: 'Low', value: 68, color: '#c2ef4e' },
+  { name: 'Moderate', value: 24, color: '#79628c' },
+  { name: 'High', value: 8, color: '#fa7faa' },
 ];
+

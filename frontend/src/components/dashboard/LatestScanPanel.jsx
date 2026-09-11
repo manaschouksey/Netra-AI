@@ -2,22 +2,6 @@ import { ScanLine, Upload } from 'lucide-react';
 import Panel from '../common/Panel';
 import { latestScan } from '../../data/mockData';
 
-/**
- * LatestScanPanel
- * ---------------------------------------------------------
- * Pure display component driven by props from App.jsx.
- *
- * Previously this panel ran its own independent file upload
- * that POSTed to a `/analyze` endpoint the backend never
- * exposed (only `/api/verify-document` exists), so every scan
- * here silently failed with "Error connecting to Backend".
- *
- * It now mirrors the SAME verification pipeline driven by the
- * "Government ID Verification" upload boxes above, so the data
- * shown here is always the real result returned by FastAPI
- * (OCR + validation + tampering + face verification), not a
- * disconnected mock request.
- */
 export default function LatestScanPanel({
   docId,
   docType,
@@ -37,7 +21,7 @@ export default function LatestScanPanel({
 
   return (
     <Panel eyebrow="Live Feed" title="Latest Scan">
-      <div className="relative overflow-hidden h-[120px] rounded-lg bg-bg-inset border border-dashed border-border-hairline flex flex-col items-center justify-center gap-1.5 text-text-muted text-[11.5px]">
+      <div className="relative overflow-hidden h-[120px] rounded-lg bg-[#1f1633] border border-dashed border-[#362d59] flex flex-col items-center justify-center gap-2 text-[#bdb8c0] text-xs">
         {previewUrl ? (
           <img
             src={previewUrl}
@@ -47,45 +31,42 @@ export default function LatestScanPanel({
         ) : (
           <>
             {loading ? (
-              <ScanLine size={26} className="animate-spin text-accent-cyan" />
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#362d59] border-t-[#c2ef4e]" />
             ) : (
-              <Upload size={26} strokeWidth={1.5} />
+              <Upload size={24} strokeWidth={1.5} className="text-[#79628c]" />
             )}
-            <span>
+            <span className="font-medium text-[11.5px]">
               {loading
                 ? 'Analyzing document...'
                 : 'Upload a document above to scan'}
             </span>
           </>
         )}
-
-        {loading && (
-          <div className="animate-scan absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-accent-cyan to-transparent shadow-[0_0_10px_var(--color-accent-cyan)]" />
-        )}
       </div>
 
       <dl className="flex flex-col gap-2.5 m-0 mt-3.5">
         <div className="flex items-baseline justify-between gap-2.5">
-          <dt className="text-[11.5px] text-text-muted">Document ID</dt>
-          <dd className="m-0 font-mono text-[12.5px] text-text-primary text-right">{data.docId}</dd>
+          <dt className="text-xs text-[#79628c]">Document ID</dt>
+          <dd className="m-0 font-mono text-xs text-[#ffffff] text-right">{data.docId}</dd>
         </div>
         <div className="flex items-baseline justify-between gap-2.5">
-          <dt className="text-[11.5px] text-text-muted">Type</dt>
-          <dd className="m-0 text-[12.5px] text-text-primary text-right">{data.docType}</dd>
+          <dt className="text-xs text-[#79628c]">Type</dt>
+          <dd className="m-0 text-xs text-[#ffffff] text-right">{data.docType}</dd>
         </div>
         <div className="flex items-baseline justify-between gap-2.5">
-          <dt className="text-[11.5px] text-text-muted">Submitted</dt>
-          <dd className="m-0 font-mono text-[12.5px] text-text-primary text-right">{data.submittedAt}</dd>
+          <dt className="text-xs text-[#79628c]">Submitted</dt>
+          <dd className="m-0 font-mono text-xs text-[#ffffff] text-right">{data.submittedAt}</dd>
         </div>
         <div className="flex items-baseline justify-between gap-2.5">
-          <dt className="text-[11.5px] text-text-muted">Officer</dt>
-          <dd className="m-0 font-mono text-[12.5px] text-text-primary text-right">{data.officer}</dd>
+          <dt className="text-xs text-[#79628c]">Officer</dt>
+          <dd className="m-0 font-mono text-xs text-[#ffffff] text-right">{data.officer}</dd>
         </div>
       </dl>
 
-      <div className="text-[11.5px] text-risk-mid bg-risk-mid-dim border border-risk-mid/30 rounded-md py-1.5 px-2.5 text-center mt-3.5">
+      <div className="text-xs font-semibold uppercase tracking-[0.2px] text-[#c2ef4e] bg-[#1f1633] border border-[#362d59] rounded-md py-2 px-3 text-center mt-3.5">
         {data.status}
       </div>
     </Panel>
   );
 }
+
