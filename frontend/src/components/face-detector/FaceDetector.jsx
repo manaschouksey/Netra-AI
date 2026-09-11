@@ -9,17 +9,24 @@ import React, { useEffect } from "react";
 import useFaceDetector from "../../hooks/useFaceDetector";
 import "./FaceDetector.css";
 
-export default function FaceDetector({ onResult, autoStart = false }) {
+export default function FaceDetector({ onResult, autoStart = false, onCaptureReady }) {
   const {
     videoRef,
     canvasRef,
     startCamera,
     stopCamera,
+    captureSnapshot,
     result,
     error,
     isCameraOn,
     isLoading,
   } = useFaceDetector();
+
+  useEffect(() => {
+    if (typeof onCaptureReady === "function") {
+      onCaptureReady(captureSnapshot);
+    }
+  }, [captureSnapshot, onCaptureReady]);
 
   // Bubble up detection results to the parent app, if provided
   useEffect(() => {

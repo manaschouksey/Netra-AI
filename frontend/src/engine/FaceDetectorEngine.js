@@ -179,27 +179,30 @@ export default class FaceDetectorEngine {
     return result;
   }
 
-  /** Draw bounding boxes + per-face confidence labels on the overlay canvas. */
+  /** Draw bounding boxes + per-face confidence labels on the overlay canvas (mirrored for selfie). */
   drawBoundingBoxes(faces) {
     const ctx = this.canvasCtx;
-    ctx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
+    const canvasW = this.canvasElement.width;
+    ctx.clearRect(0, 0, canvasW, this.canvasElement.height);
 
     faces.forEach((face, index) => {
       const { x, y, width, height } = face.box;
+      // Mirror x-coordinate so bounding box matches the mirrored selfie video feed
+      const drawX = canvasW - x - width;
 
       ctx.strokeStyle = "#c2ef4e";
       ctx.lineWidth = 2;
-      ctx.strokeRect(x, y, width, height);
+      ctx.strokeRect(drawX, y, width, height);
 
       const label = `Face ${index + 1} (${Math.round(face.confidence * 100)}%)`;
       ctx.font = "600 12px Rubik, -apple-system, sans-serif";
       const textWidth = ctx.measureText(label).width;
 
       ctx.fillStyle = "#c2ef4e";
-      ctx.fillRect(x, y > 20 ? y - 20 : y, textWidth + 8, 20);
+      ctx.fillRect(drawX, y > 20 ? y - 20 : y, textWidth + 8, 20);
 
       ctx.fillStyle = "#1f1633";
-      ctx.fillText(label, x + 4, y > 20 ? y - 6 : y + 14);
+      ctx.fillText(label, drawX + 4, y > 20 ? y - 6 : y + 14);
     });
   }
 

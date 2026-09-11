@@ -22,7 +22,7 @@ export default function VerifyPage({
   const isAuth = status.includes('AUTH') || status.includes('PASS') || status.includes('CLEAR') || status.includes('LOW');
 
   return (
-    <div className="flex flex-col gap-6 sm:gap-8 max-w-[1152px] mx-auto w-full px-4 sm:px-6 py-6 sm:py-8 animate-fade-in">
+    <div className="flex flex-col gap-6 sm:gap-8 max-w-[1600px] mx-auto w-full px-4 sm:px-8 md:px-12 lg:px-16 py-6 sm:py-8 animate-fade-in">
       {/* PAGE HEADER */}
       <div>
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md border border-[#362d59] bg-[#150f23] text-xs font-semibold uppercase tracking-[0.25px] text-[#79628c] mb-3">

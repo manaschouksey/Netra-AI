@@ -21,7 +21,7 @@ import {
 
 function LimeSquiggleDivider() {
   return (
-    <div className="w-full overflow-hidden py-6 sm:py-8 max-w-[1152px] mx-auto px-4 sm:px-6" aria-hidden="true">
+    <div className="w-full overflow-hidden py-6 sm:py-8 max-w-[1600px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16" aria-hidden="true">
       <svg
         viewBox="0 0 1200 16"
         fill="none"
@@ -42,7 +42,7 @@ function LimeSquiggleDivider() {
 
 function AppFooter({ onNavigate }) {
   return (
-    <footer className="max-w-[1152px] mx-auto w-full px-4 sm:px-6 pb-12 text-xs text-[#bdb8c0] flex flex-col gap-6">
+    <footer className="max-w-[1600px] mx-auto w-full px-4 sm:px-8 md:px-12 lg:px-16 pb-12 text-xs text-[#bdb8c0] flex flex-col gap-6">
       <div className="flex items-center justify-between flex-wrap gap-4 pt-2">
         <div className="flex items-center gap-2">
           <span className="font-bold text-[#ffffff] text-sm">

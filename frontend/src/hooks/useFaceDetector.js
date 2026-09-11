@@ -66,6 +66,28 @@ export default function useFaceDetector(options = {}) {
     return await engineRef.current.detectFace();
   }, []);
 
+  const captureSnapshot = useCallback(() => {
+    if (!videoRef.current) return null;
+    const video = videoRef.current;
+    if (!video.videoWidth || !video.videoHeight) return null;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext("2d");
+
+    // Draw mirrored to match the selfie camera view
+    ctx.translate(canvas.width, 0);
+    ctx.scale(-1, 1);
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    return new Promise((resolve) => {
+      canvas.toBlob((blob) => {
+        resolve(blob);
+      }, "image/jpeg", 0.92);
+    });
+  }, []);
+
   // Cleanup on unmount: stop camera + release webcam stream
   useEffect(() => {
     return () => {
@@ -79,6 +101,7 @@ export default function useFaceDetector(options = {}) {
     startCamera,
     stopCamera,
     detectFace,
+    captureSnapshot,
     result,
     error,
     isCameraOn,

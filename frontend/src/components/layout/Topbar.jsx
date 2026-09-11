@@ -19,7 +19,7 @@ export default function Topbar({ activeTab, onTabChange, theme, setTheme }) {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-[#362d59] bg-[#1f1633]/95 backdrop-blur-md transition-colors">
-      <div className="max-w-[1152px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 h-18 flex items-center justify-between gap-4">
         {/* BRAND LOGO */}
         <div
           className="flex items-center gap-2.5 cursor-pointer select-none shrink-0"
