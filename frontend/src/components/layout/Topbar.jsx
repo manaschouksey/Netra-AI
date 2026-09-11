@@ -1,45 +1,79 @@
-import { Search, Bell, ChevronDown } from 'lucide-react';
+import React from 'react';
+import { ShieldCheck, ArrowRight } from 'lucide-react';
 
-const TABS = ['Dashboard', 'Face Detection', 'Search', 'Notification', 'Officer Profile'];
+const NAV_LINKS = [
+  { id: 'Home', label: 'Home' },
+  { id: 'Verify ID', label: 'Verify ID' },
+  { id: 'Live Face Check', label: 'Live Face Check' },
+  { id: 'Pricing', label: 'Pricing' },
+  { id: 'Docs', label: 'Docs' },
+];
 
 export default function Topbar({ activeTab, onTabChange }) {
   return (
-    <header className="flex items-center justify-between gap-6 px-7 h-16 border-b border-[#362d59] bg-[#1f1633] sticky top-0 z-10 max-[700px]:px-4">
-      <nav className="flex gap-1.5 overflow-x-auto" aria-label="Sections">
-        {TABS.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => onTabChange?.(tab)}
-            className={`border text-[13px] font-medium px-3.5 py-1.5 rounded-md cursor-pointer whitespace-nowrap transition-colors
-              ${activeTab === tab
-                ? 'text-[#ffffff] bg-[#150f23] border-[#362d59]'
-                : 'text-[#bdb8c0] hover:text-[#ffffff] bg-transparent border-transparent'}`}
-          >
-            {tab}
-          </button>
-        ))}
+    <header className="flex items-center justify-between gap-6 px-6 md:px-10 h-18 border-b border-[#362d59] bg-[#1f1633] sticky top-0 z-30">
+      {/* BRAND LOGO */}
+      <div
+        className="flex items-center gap-3 cursor-pointer select-none shrink-0"
+        onClick={() => onTabChange('Home')}
+      >
+        <div className="w-8 h-8 grid place-items-center rounded-md bg-[#150f23] border border-[#362d59] shrink-0" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="20" height="20">
+            <path
+              d="M16 2 L28 7 V15 C28 22.5 22.8 27.8 16 30 C9.2 27.8 4 22.5 4 15 V7 Z"
+              fill="none"
+              stroke="#c2ef4e"
+              strokeWidth="2.2"
+            />
+            <path d="M11 16 L14.5 19.5 L21.5 12" fill="none" stroke="#c2ef4e" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+        <span className="font-sans font-bold text-lg tracking-tight text-[#ffffff]">
+          NETRA<span className="text-[#c2ef4e]">.AI</span>
+        </span>
+      </div>
+
+      {/* CENTER NAV LINKS */}
+      <nav className="hidden md:flex items-center gap-1" aria-label="Main Navigation">
+        {NAV_LINKS.map(({ id, label }) => {
+          const isActive = activeTab === id;
+          return (
+            <button
+              key={id}
+              type="button"
+              onClick={() => onTabChange(id)}
+              className={`px-3.5 py-1.5 rounded-md text-xs font-semibold uppercase tracking-[0.2px] cursor-pointer transition-colors border ${
+                isActive
+                  ? 'bg-[#150f23] text-[#ffffff] border-[#362d59]'
+                  : 'text-[#bdb8c0] hover:text-[#ffffff] bg-transparent border-transparent'
+              }`}
+            >
+              {label}
+            </button>
+          );
+        })}
       </nav>
 
-      <div className="flex items-center gap-3.5 shrink-0">
-        <div className="hidden min-[901px]:flex items-center gap-2 bg-[#150f23] border border-[#362d59] rounded-md px-3 py-1.5 text-[#bdb8c0] w-65">
-          <Search size={15} strokeWidth={1.8} />
-          <input
-            type="text"
-            placeholder="Search case ID, document, officer…"
-            className="bg-transparent border-none outline-none text-[#ffffff] text-xs w-full placeholder:text-[#79628c]"
-          />
-        </div>
-        <button className="relative w-8.5 h-8.5 grid place-items-center rounded-md border border-[#362d59] bg-[#150f23] text-[#bdb8c0] cursor-pointer hover:text-[#ffffff]" aria-label="Notifications">
-          <Bell size={17} strokeWidth={1.8} />
-          <span className="absolute -top-1 -right-1 bg-[#fa7faa] text-[#150f23] text-[9px] font-bold w-3.5 h-3.5 rounded-full grid place-items-center">3</span>
+      {/* RIGHT ACTIONS */}
+      <div className="flex items-center gap-3 shrink-0">
+        <button
+          type="button"
+          onClick={() => onTabChange('Live Face Check')}
+          className="hidden sm:inline-flex btn-ghost-on-dark text-xs py-2 px-3.5 font-bold uppercase tracking-[0.2px]"
+        >
+          Get Demo
         </button>
-        <button className="flex items-center gap-2 border border-[#362d59] bg-[#150f23] rounded-md pl-1.5 pr-2.5 py-1 text-[#bdb8c0] text-xs cursor-pointer hover:text-[#ffffff]">
-          <div className="w-6 h-6 rounded-full bg-[#3f3849] text-[#ffffff] font-mono text-[10px] font-bold grid place-items-center">SS</div>
-          <span>SSB-102</span>
-          <ChevronDown size={14} strokeWidth={1.8} />
+        <button
+          type="button"
+          onClick={() => onTabChange('Verify ID')}
+          className="btn-inverted text-xs py-2 px-4 font-bold uppercase tracking-[0.2px] flex items-center gap-1.5"
+        >
+          <span>Verify Now</span>
+          <ArrowRight size={14} />
         </button>
       </div>
     </header>
   );
 }
+
 
