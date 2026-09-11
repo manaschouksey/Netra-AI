@@ -1,0 +1,25 @@
+name: Keep Render Backend Awake
+
+on:
+  schedule:
+    # Runs every 12 minutes to prevent Render free-tier from sleeping (timeout is 15 mins)
+    - cron: '*/12 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Backend Health Endpoint
+        env:
+          RENDER_BACKEND_URL: ${{ secrets.RENDER_BACKEND_URL }}
+        run: |
+          TARGET_URL="${RENDER_BACKEND_URL:-https://your-backend-app.onrender.com}/health"
+          echo "Pinging health endpoint: $TARGET_URL"
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$TARGET_URL" || true)
+          echo "Response HTTP Status: $HTTP_STATUS"
+          if [ "$HTTP_STATUS" -eq 200 ]; then
+            echo "Render service is awake and healthy!"
+          else
+            echo "Service may be cold starting or URL not configured yet (status: $HTTP_STATUS)"
+          fi
