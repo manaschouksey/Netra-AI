@@ -34,7 +34,8 @@ export default class FaceDetectorEngine {
       inputSize: 224,
       scoreThreshold: 0.5,
       detectionIntervalMs: 150,
-      modelUrl: "https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights",
+      modelUrl: "/models",
+      fallbackModelUrl: "https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights",
       ...options,
     };
 
@@ -50,8 +51,14 @@ export default class FaceDetectorEngine {
   /** Load TinyFaceDetector model weights (lightweight, real-time friendly). */
   async loadModel() {
     if (this.modelLoaded) return;
-    await faceapi.nets.tinyFaceDetector.loadFromUri(this.config.modelUrl);
-    this.modelLoaded = true;
+    try {
+      await faceapi.nets.tinyFaceDetector.loadFromUri(this.config.modelUrl);
+      this.modelLoaded = true;
+    } catch (localErr) {
+      console.warn("Local model load failed, attempting CDN fallback:", localErr);
+      await faceapi.nets.tinyFaceDetector.loadFromUri(this.config.fallbackModelUrl);
+      this.modelLoaded = true;
+    }
   }
 
   /**
