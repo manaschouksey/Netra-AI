@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 
 // Navigation
 import Topbar from './components/layout/Topbar';
+import { useTheme } from './components/common/ThemeToggle';
 
 // Dedicated Pages (Zero Duplicacy)
 import LandingPage from './components/pages/LandingPage';
 import VerifyPage from './components/pages/VerifyPage';
 import FaceCheckPage from './components/pages/FaceCheckPage';
-import PricingPage from './components/pages/PricingPage';
 import DocsPage from './components/pages/DocsPage';
 
 // Verification Engine Hooks & Utilities
@@ -21,12 +21,12 @@ import {
 
 function LimeSquiggleDivider() {
   return (
-    <div className="w-full overflow-hidden py-8 max-w-[1152px] mx-auto px-6" aria-hidden="true">
+    <div className="w-full overflow-hidden py-6 sm:py-8 max-w-[1152px] mx-auto px-4 sm:px-6" aria-hidden="true">
       <svg
         viewBox="0 0 1200 16"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-3.5 block"
+        className="w-full h-3 block"
         preserveAspectRatio="none"
       >
         <path
@@ -40,9 +40,9 @@ function LimeSquiggleDivider() {
   );
 }
 
-function SentryFooter({ onNavigate }) {
+function AppFooter({ onNavigate }) {
   return (
-    <footer className="max-w-[1152px] mx-auto w-full px-6 pb-12 text-xs text-[#bdb8c0] flex flex-col gap-6">
+    <footer className="max-w-[1152px] mx-auto w-full px-4 sm:px-6 pb-12 text-xs text-[#bdb8c0] flex flex-col gap-6">
       <div className="flex items-center justify-between flex-wrap gap-4 pt-2">
         <div className="flex items-center gap-2">
           <span className="font-bold text-[#ffffff] text-sm">
@@ -51,23 +51,23 @@ function SentryFooter({ onNavigate }) {
           <span className="text-[#79628c]">/</span>
           <span className="text-xs">Identity Document Forensics</span>
         </div>
-        <div className="flex items-center gap-6 text-xs text-[#79628c]">
+        <div className="flex items-center gap-5 sm:gap-6 text-xs text-[#79628c] flex-wrap">
           <button type="button" onClick={() => onNavigate('Home')} className="hover:text-[#ffffff] transition-colors cursor-pointer bg-transparent border-none p-0">Home</button>
           <button type="button" onClick={() => onNavigate('Verify ID')} className="hover:text-[#ffffff] transition-colors cursor-pointer bg-transparent border-none p-0">Verify ID</button>
           <button type="button" onClick={() => onNavigate('Live Face Check')} className="hover:text-[#ffffff] transition-colors cursor-pointer bg-transparent border-none p-0">Face Check</button>
-          <button type="button" onClick={() => onNavigate('Pricing')} className="hover:text-[#ffffff] transition-colors cursor-pointer bg-transparent border-none p-0">Pricing</button>
           <button type="button" onClick={() => onNavigate('Docs')} className="hover:text-[#ffffff] transition-colors cursor-pointer bg-transparent border-none p-0">Docs</button>
         </div>
       </div>
-      <div className="flex items-center justify-between flex-wrap gap-4 text-[11px] text-[#79628c] pt-2 border-t border-[#362d59]">
-        <span>© 2026 NETRA AI / TrustID Systems. Strictly Sentry design system compliant.</span>
-        <span>Built with 100% Sentry DESIGN.md &amp; Zero Vibe-Coding.</span>
+      <div className="flex items-center justify-between flex-wrap gap-4 text-[11px] text-[#79628c] pt-3 border-t border-[#362d59]">
+        <span>© 2026 NETRA AI / TrustID Systems. All rights reserved.</span>
+        <span>Autonomous Identity Verification &amp; Biometric Forensics.</span>
       </div>
     </footer>
   );
 }
 
 export default function App() {
+  const [theme, setTheme] = useTheme();
   const [activeTab, setActiveTab] = useState('Home');
   const [faceDetectionResult, setFaceDetectionResult] = useState(null);
 
@@ -94,12 +94,17 @@ export default function App() {
   const extractedInfoRows = mapExtractedInfoRows(verificationResult);
 
   return (
-    <div className="min-h-screen bg-[#1f1633] text-[#ffffff] flex flex-col font-sans">
-      {/* AUTHENTIC SENTRY TOP NAVIGATION */}
-      <Topbar activeTab={activeTab} onTabChange={setActiveTab} />
+    <div className="min-h-screen bg-[#1f1633] text-[#ffffff] flex flex-col font-sans transition-colors duration-200">
+      {/* TOP NAVIGATION */}
+      <Topbar
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        theme={theme}
+        setTheme={setTheme}
+      />
 
-      {/* DEDICATED UNIQUE PAGES (ZERO DUPLICACY, SIMPLE 5YO ENGLISH) */}
-      <main className="flex-1 min-w-0">
+      {/* DEDICATED PAGE VIEWS */}
+      <main className="flex-1 w-full" id="main-content">
         {activeTab === 'Home' && (
           <LandingPage onNavigate={setActiveTab} />
         )}
@@ -129,20 +134,14 @@ export default function App() {
           />
         )}
 
-        {activeTab === 'Pricing' && (
-          <PricingPage onNavigate={setActiveTab} />
-        )}
-
         {activeTab === 'Docs' && (
           <DocsPage onNavigate={setActiveTab} />
         )}
       </main>
 
-      {/* SIGNATURE SENTRY LIME SQUIGGLY DIVIDER & FOOTER */}
+      {/* LIME SQUIGGLY DIVIDER & CLEAN FOOTER */}
       <LimeSquiggleDivider />
-      <SentryFooter onNavigate={setActiveTab} />
+      <AppFooter onNavigate={setActiveTab} />
     </div>
   );
 }
-
-
