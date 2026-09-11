@@ -1,0 +1,418 @@
+[
+  {
+    "scenario": {
+      "id": "CASE-1",
+      "name": "Standard Passport + Authentic Live Face",
+      "doc": "C:\\Users\\Manas\\Projects\\Netra-TrustID\\scratch\\test_samples\\sample_uk_passport.jpg",
+      "selfie": "C:\\Users\\Manas\\Projects\\Netra-TrustID\\scratch\\test_samples\\sample_person_a.jpg",
+      "description": "UK Passport Specimen compared with matching live selfie photo"
+    },
+    "result": {
+      "success": true,
+      "data": {
+        "requestId": "358857c3",
+        "docId": "P88734120",
+        "docType": "Passport",
+        "submittedAt": "Just now",
+        "officer": "Officer System",
+        "thumbnailLabel": "sample_uk_passport.jpg",
+        "status": "Approve",
+        "riskScore": 16.0,
+        "riskBreakdown": {
+          "validation_risk": 0.0,
+          "tampering_risk": 1.76,
+          "face_match_risk": 50.15
+        },
+        "faceMatch": {
+          "score": 49.85,
+          "percentage": 49.85,
+          "status": "MATCH",
+          "level": "LOW"
+        },
+        "documentMatch": {
+          "matched": true,
+          "count": 1
+        },
+        "modules": {
+          "ocr": {
+            "raw_text": "OFFICIAL PASSPORT\n\nNAME: MORGAN ALEX\n\nDoc No P88734120\n\nog 14/05/1982\n\nExp. 20/11/2030\n\nPeGERMOAGAN<ALEXcecexeccecececcececencecece\n\nP887941205GERB205 142MS011204ccececeececeeeO2",
+            "document_type": "Passport",
+            "document_number": "P88734120",
+            "name": "MORGAN ALEX\n\nDoc No P",
+            "date_of_birth": "14/05/1982",
+            "ocr_confidence": 60.5
+          },
+          "validation": {
+            "is_valid": true,
+            "issues": [],
+            "checks": {
+              "fields_present": true,
+              "ocr_confidence_ok": true,
+              "dob_plausible": true
+            }
+          },
+          "tampering": {
+            "tamper_score": 1.76,
+            "risk_level": "low",
+            "method": "error_level_analysis",
+            "notes": "Error levels consistent across image; no obvious digital tampering detected."
+          },
+          "face_verification": {
+            "face_detected_on_document": true,
+            "face_detected_on_live_photo": true,
+            "match": true,
+            "similarity_score": 49.85,
+            "method": "opencv_fallback",
+            "notes": "Biometric face verification completed via color & structural correlation."
+          }
+        },
+        "summary": {
+          "ocrCompleted": true,
+          "validationCompleted": true,
+          "tamperingAnalysisCompleted": true,
+          "faceVerificationCompleted": true,
+          "faceMatchScore": 49.85,
+          "faceMatchLevel": "LOW",
+          "documentMatched": true,
+          "documentsMatched": 1,
+          "riskScore": 16.0,
+          "recommendation": "Approve"
+        }
+      }
+    }
+  },
+  {
+    "scenario": {
+      "id": "CASE-2",
+      "name": "National ID Card + Face Verification",
+      "doc": "C:\\Users\\Manas\\Projects\\Netra-TrustID\\scratch\\test_samples\\sample_german_id.jpg",
+      "selfie": "C:\\Users\\Manas\\Projects\\Netra-TrustID\\scratch\\test_samples\\sample_person_a.jpg",
+      "description": "German ID Card specimen with front portrait against live photo"
+    },
+    "result": {
+      "success": true,
+      "data": {
+        "requestId": "f06f2ea4",
+        "docId": "P88734120",
+        "docType": "Passport / ID",
+        "submittedAt": "Just now",
+        "officer": "Officer System",
+        "thumbnailLabel": "sample_german_id.jpg",
+        "status": "Approve",
+        "riskScore": 23.0,
+        "riskBreakdown": {
+          "validation_risk": 25.0,
+          "tampering_risk": 1.78,
+          "face_match_risk": 50.15
+        },
+        "faceMatch": {
+          "score": 49.85,
+          "percentage": 49.85,
+          "status": "MATCH",
+          "level": "LOW"
+        },
+        "documentMatch": {
+          "matched": false,
+          "count": 0
+        },
+        "modules": {
+          "ocr": {
+            "raw_text": "OFFICIAL NATIONAL IDCARO\n\nNAME: MORGAN ALEX\n\nDoc No P88734120\n\nog 14/05/1982\n\nExp. 20/11/2030\n\nPeGERMOAGAN<ALEXcecexeccecececcececencecece\n\nP887941205GERB205 142MS011204ccececeececeeeO2",
+            "document_type": "Passport / ID",
+            "document_number": "P88734120",
+            "name": "MORGAN ALEX\n\nDoc No P",
+            "date_of_birth": "14/05/1982",
+            "ocr_confidence": 59.1
+          },
+          "validation": {
+            "is_valid": false,
+            "issues": [
+              "Low OCR confidence (59.1%), extracted fields may be unreliable"
+            ],
+            "checks": {
+              "fields_present": true,
+              "ocr_confidence_ok": false,
+              "dob_plausible": true
+            }
+          },
+          "tampering": {
+            "tamper_score": 1.78,
+            "risk_level": "low",
+            "method": "error_level_analysis",
+            "notes": "Error levels consistent across image; no obvious digital tampering detected."
+          },
+          "face_verification": {
+            "face_detected_on_document": true,
+            "face_detected_on_live_photo": true,
+            "match": true,
+            "similarity_score": 49.85,
+            "method": "opencv_fallback",
+            "notes": "Biometric face verification completed via color & structural correlation."
+          }
+        },
+        "summary": {
+          "ocrCompleted": true,
+          "validationCompleted": true,
+          "tamperingAnalysisCompleted": true,
+          "faceVerificationCompleted": true,
+          "faceMatchScore": 49.85,
+          "faceMatchLevel": "LOW",
+          "documentMatched": false,
+          "documentsMatched": 0,
+          "riskScore": 23.0,
+          "recommendation": "Approve"
+        }
+      }
+    }
+  },
+  {
+    "scenario": {
+      "id": "CASE-3",
+      "name": "Driving License (Document-Only Scan)",
+      "doc": "C:\\Users\\Manas\\Projects\\Netra-TrustID\\scratch\\test_samples\\sample_uk_license.jpg",
+      "selfie": null,
+      "description": "Official Driving License specimen verified without a live selfie"
+    },
+    "result": {
+      "success": true,
+      "data": {
+        "requestId": "c52ce3a6",
+        "docId": "P88734120",
+        "docType": "Driving Licence",
+        "submittedAt": "Just now",
+        "officer": "Officer System",
+        "thumbnailLabel": "sample_uk_license.jpg",
+        "status": "Approve",
+        "riskScore": 7.0,
+        "riskBreakdown": {
+          "validation_risk": 0.0,
+          "tampering_risk": 1.78,
+          "face_match_risk": 20.0
+        },
+        "faceMatch": {
+          "score": null,
+          "percentage": null,
+          "status": "NO MATCH",
+          "level": "UNKNOWN"
+        },
+        "documentMatch": {
+          "matched": true,
+          "count": 1
+        },
+        "modules": {
+          "ocr": {
+            "raw_text": "OFFICIAL DRIVING LICENSE\n\nNAME: MORGAN ALEX\n\nDoc No P88734120\n\nog 14/05/1982\n\nExp. 20/11/2030\n\nPeGERMOAGAN<ALEXcecexeccecececcececencecece\n\nP887941205GERB205 142MS011204ccececeececeeeO2",
+            "document_type": "Driving Licence",
+            "document_number": "P88734120",
+            "name": "MORGAN ALEX\n\nDoc No P",
+            "date_of_birth": "14/05/1982",
+            "ocr_confidence": 61.81
+          },
+          "validation": {
+            "is_valid": true,
+            "issues": [],
+            "checks": {
+              "fields_present": true,
+              "ocr_confidence_ok": true,
+              "dob_plausible": true
+            }
+          },
+          "tampering": {
+            "tamper_score": 1.78,
+            "risk_level": "low",
+            "method": "error_level_analysis",
+            "notes": "Error levels consistent across image; no obvious digital tampering detected."
+          },
+          "face_verification": {
+            "face_detected_on_document": true,
+            "face_detected_on_live_photo": null,
+            "match": null,
+            "similarity_score": null,
+            "method": "opencv_fallback",
+            "notes": "Face detected on document; no live photo provided to compare."
+          }
+        },
+        "summary": {
+          "ocrCompleted": true,
+          "validationCompleted": true,
+          "tamperingAnalysisCompleted": true,
+          "faceVerificationCompleted": true,
+          "faceMatchScore": null,
+          "faceMatchLevel": "UNKNOWN",
+          "documentMatched": true,
+          "documentsMatched": 1,
+          "riskScore": 7.0,
+          "recommendation": "Approve"
+        }
+      }
+    }
+  },
+  {
+    "scenario": {
+      "id": "CASE-4",
+      "name": "Passport + Mismatched Portrait (Impersonation Test)",
+      "doc": "C:\\Users\\Manas\\Projects\\Netra-TrustID\\scratch\\test_samples\\sample_uk_passport.jpg",
+      "selfie": "C:\\Users\\Manas\\Projects\\Netra-TrustID\\scratch\\test_samples\\sample_person_b.jpg",
+      "description": "Authentic ID card tested against completely different individual portrait"
+    },
+    "result": {
+      "success": true,
+      "data": {
+        "requestId": "6d98162e",
+        "docId": "P88734120",
+        "docType": "Passport",
+        "submittedAt": "Just now",
+        "officer": "Officer System",
+        "thumbnailLabel": "sample_uk_passport.jpg",
+        "status": "Approve",
+        "riskScore": 15.0,
+        "riskBreakdown": {
+          "validation_risk": 0.0,
+          "tampering_risk": 1.76,
+          "face_match_risk": 47.99
+        },
+        "faceMatch": {
+          "score": 52.01,
+          "percentage": 52.01,
+          "status": "MATCH",
+          "level": "MEDIUM"
+        },
+        "documentMatch": {
+          "matched": true,
+          "count": 1
+        },
+        "modules": {
+          "ocr": {
+            "raw_text": "OFFICIAL PASSPORT\n\nNAME: MORGAN ALEX\n\nDoc No P88734120\n\nog 14/05/1982\n\nExp. 20/11/2030\n\nPeGERMOAGAN<ALEXcecexeccecececcececencecece\n\nP887941205GERB205 142MS011204ccececeececeeeO2",
+            "document_type": "Passport",
+            "document_number": "P88734120",
+            "name": "MORGAN ALEX\n\nDoc No P",
+            "date_of_birth": "14/05/1982",
+            "ocr_confidence": 60.5
+          },
+          "validation": {
+            "is_valid": true,
+            "issues": [],
+            "checks": {
+              "fields_present": true,
+              "ocr_confidence_ok": true,
+              "dob_plausible": true
+            }
+          },
+          "tampering": {
+            "tamper_score": 1.76,
+            "risk_level": "low",
+            "method": "error_level_analysis",
+            "notes": "Error levels consistent across image; no obvious digital tampering detected."
+          },
+          "face_verification": {
+            "face_detected_on_document": true,
+            "face_detected_on_live_photo": true,
+            "match": true,
+            "similarity_score": 52.01,
+            "method": "opencv_fallback",
+            "notes": "Biometric face verification completed via color & structural correlation."
+          }
+        },
+        "summary": {
+          "ocrCompleted": true,
+          "validationCompleted": true,
+          "tamperingAnalysisCompleted": true,
+          "faceVerificationCompleted": true,
+          "faceMatchScore": 52.01,
+          "faceMatchLevel": "MEDIUM",
+          "documentMatched": true,
+          "documentsMatched": 1,
+          "riskScore": 15.0,
+          "recommendation": "Approve"
+        }
+      }
+    }
+  },
+  {
+    "scenario": {
+      "id": "CASE-5",
+      "name": "Digitally Manipulated / Spliced Document",
+      "doc": "C:\\Users\\Manas\\Projects\\Netra-TrustID\\scratch\\test_samples\\sample_tampered_passport.jpg",
+      "selfie": "C:\\Users\\Manas\\Projects\\Netra-TrustID\\scratch\\test_samples\\sample_person_a.jpg",
+      "description": "Tampered photo with localized compression glitch and pasted text"
+    },
+    "result": {
+      "success": true,
+      "data": {
+        "requestId": "14ca812b",
+        "docId": "DOC-22846",
+        "docType": "Passport",
+        "submittedAt": "Just now",
+        "officer": "Officer System",
+        "thumbnailLabel": "sample_tampered_passport.jpg",
+        "status": "Manual Review",
+        "riskScore": 38.0,
+        "riskBreakdown": {
+          "validation_risk": 75.0,
+          "tampering_risk": 1.91,
+          "face_match_risk": 50.18
+        },
+        "faceMatch": {
+          "score": 49.82,
+          "percentage": 49.82,
+          "status": "MATCH",
+          "level": "LOW"
+        },
+        "documentMatch": {
+          "matched": false,
+          "count": 0
+        },
+        "modules": {
+          "ocr": {
+            "raw_text": "\u2018OFFICIAL PASSPORT:\n\n\u2018NAME\u2019 MORGAN ALEX,\n\nPEGHRMORGANG \u00a2AL DERE e ete eae Ceeee cece cee ceee\n\nfudziargoadanazos varesddr doaeececczeeeseecod!",
+            "document_type": "Passport",
+            "document_number": null,
+            "name": null,
+            "date_of_birth": null,
+            "ocr_confidence": 28.05
+          },
+          "validation": {
+            "is_valid": false,
+            "issues": [
+              "Missing fields: document_number, name, date_of_birth",
+              "Low OCR confidence (28.05%), extracted fields may be unreliable",
+              "Date of birth not extracted, cannot check plausibility"
+            ],
+            "checks": {
+              "fields_present": false,
+              "ocr_confidence_ok": false,
+              "dob_plausible": false
+            }
+          },
+          "tampering": {
+            "tamper_score": 1.91,
+            "risk_level": "low",
+            "method": "error_level_analysis",
+            "notes": "Error levels consistent across image; no obvious digital tampering detected."
+          },
+          "face_verification": {
+            "face_detected_on_document": true,
+            "face_detected_on_live_photo": true,
+            "match": true,
+            "similarity_score": 49.82,
+            "method": "opencv_fallback",
+            "notes": "Biometric face verification completed via color & structural correlation."
+          }
+        },
+        "summary": {
+          "ocrCompleted": true,
+          "validationCompleted": true,
+          "tamperingAnalysisCompleted": true,
+          "faceVerificationCompleted": true,
+          "faceMatchScore": 49.82,
+          "faceMatchLevel": "LOW",
+          "documentMatched": false,
+          "documentsMatched": 0,
+          "riskScore": 38.0,
+          "recommendation": "Manual Review"
+        }
+      }
+    }
+  }
+]

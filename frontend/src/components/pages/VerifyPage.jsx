@@ -1,7 +1,8 @@
 import React from 'react';
-import { CheckCircle2, AlertTriangle, ShieldCheck, FileCheck, ArrowRight, UserCheck } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, FileCheck, ArrowRight, UserCheck } from 'lucide-react';
 import { ALLOWED_DOC_EXTENSIONS, ALLOWED_FACE_EXTENSIONS } from '../../constants';
 import { formatPercentage, formatScore } from '../../utils/formatters';
+import VerificationProgressBar from '../common/VerificationProgressBar';
 
 export default function VerifyPage({
   documentFile,
@@ -17,9 +18,15 @@ export default function VerifyPage({
   faceStatus,
   extractedInfoRows,
   history,
+  // Progress props
+  progress        = 0,
+  stageLabel      = '',
+  stageDetail     = '',
+  stageIdx        = -1,
+  progressComplete = false,
 }) {
   const status = (verificationResult?.status || '').toUpperCase();
-  const isAuth = status.includes('AUTH') || status.includes('PASS') || status.includes('CLEAR') || status.includes('LOW');
+  const isAuth = status.includes('AUTH') || status.includes('PASS') || status.includes('CLEAR') || status.includes('APPRO');
 
   return (
     <div className="flex flex-col gap-6 sm:gap-8 max-w-[1600px] mx-auto w-full px-4 sm:px-8 md:px-12 lg:px-16 py-6 sm:py-8 animate-fade-in">
@@ -33,7 +40,7 @@ export default function VerifyPage({
           Check Any Government <span className="chip-lime-keyword">ID Card</span>
         </h1>
         <p className="text-sm md:text-base text-[#bdb8c0] max-w-[680px] mt-2 font-normal leading-relaxed">
-          Upload two pictures: the government plastic card and a selfie photo. Our AI checks if the numbers are real, if the photo was changed, and if the faces match.
+          Upload two pictures: the government ID card and a selfie photo. Our AI reads the text, checks for edits, and checks if the face matches.
         </p>
       </div>
 
@@ -108,19 +115,15 @@ export default function VerifyPage({
         </div>
       </section>
 
-      {/* VERIFICATION IN PROGRESS */}
-      {isVerifying && (
-        <section className="bg-[#150f23] border border-[#362d59] rounded-xl p-8 text-center flex flex-col items-center gap-4">
-          <div className="h-8 w-8 animate-spin rounded-full border-3 border-[#362d59] border-t-[#c2ef4e]" />
-          <div>
-            <h3 className="text-base font-semibold text-[#ffffff] m-0">
-              Analyzing ID with intelligent AI models...
-            </h3>
-            <p className="text-xs text-[#bdb8c0] mt-1 font-normal">
-              Reading printed words, running forensic tampering checks, and executing biometric facial match.
-            </p>
-          </div>
-        </section>
+      {/* ── REAL-TIME PROGRESS BAR ─────────────────────────────────────── */}
+      {(isVerifying || (progressComplete && !verificationResult)) && (
+        <VerificationProgressBar
+          progress={progress}
+          stageLabel={stageLabel}
+          stageDetail={stageDetail}
+          stageIdx={stageIdx}
+          isComplete={progressComplete}
+        />
       )}
 
       {/* VERIFICATION RESULT */}
@@ -162,7 +165,9 @@ export default function VerifyPage({
             <div className="bg-[#150f23] border border-[#362d59] rounded-xl p-5 flex flex-col gap-2">
               <div className="text-xs font-semibold uppercase tracking-[0.2px] text-[#79628c]">OCR Text Extraction</div>
               <div className="text-base font-bold text-[#ffffff]">
-                {verificationResult.modules?.ocr?.ocr_confidence ? `${Math.round(verificationResult.modules.ocr.ocr_confidence)}% Confidence` : 'Text Parsed'}
+                {verificationResult.modules?.ocr?.ocr_confidence
+                  ? `${Math.round(verificationResult.modules.ocr.ocr_confidence)}% Confidence`
+                  : 'Text Parsed'}
               </div>
               <div className="text-xs text-[#c2ef4e]">✓ Characters digitized</div>
             </div>
@@ -179,7 +184,7 @@ export default function VerifyPage({
 
             <div className="bg-[#150f23] border border-[#362d59] rounded-xl p-5 flex flex-col gap-2">
               <div className="text-xs font-semibold uppercase tracking-[0.2px] text-[#79628c]">Document Type</div>
-              <div className="text-base font-bold text-[#ffffff] truncate">{verificationResult.docType || 'Passport'}</div>
+              <div className="text-base font-bold text-[#ffffff] truncate">{verificationResult.docType || 'Government ID'}</div>
               <div className="text-xs text-[#bdb8c0]">Government issued</div>
             </div>
 
@@ -190,9 +195,9 @@ export default function VerifyPage({
             </div>
           </div>
 
-          {/* INITIAL VERSION FORENSICS METRICS SUITE */}
+          {/* FORENSICS METRICS SUITE */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* EXTRACTED INFORMATION (6 cols) */}
+            {/* EXTRACTED INFORMATION */}
             <div className="lg:col-span-6 bg-[#150f23] border border-[#362d59] rounded-xl p-6 flex flex-col gap-4">
               <div className="flex items-center justify-between border-b border-[#362d59] pb-3">
                 <span className="text-xs font-semibold uppercase tracking-[0.2px] text-[#79628c]">
@@ -205,7 +210,9 @@ export default function VerifyPage({
                   {extractedInfoRows.map((row) => (
                     <div key={row.field} className="flex items-baseline justify-between border-b border-[#362d59]/60 pb-2">
                       <dt className="text-xs text-[#79628c]">{row.field}</dt>
-                      <dd className="m-0 font-mono text-xs text-[#ffffff] font-semibold truncate max-w-[140px]">{row.value}</dd>
+                      <dd className="m-0 font-mono text-xs text-[#ffffff] font-semibold truncate max-w-[140px]">
+                        {row.value || '—'}
+                      </dd>
                     </div>
                   ))}
                 </dl>
@@ -214,7 +221,7 @@ export default function VerifyPage({
               )}
             </div>
 
-            {/* FORENSIC RISK BREAKDOWN & TAMPERING (6 cols) */}
+            {/* FORENSIC RISK BREAKDOWN */}
             <div className="lg:col-span-6 bg-[#150f23] border border-[#362d59] rounded-xl p-6 flex flex-col gap-4">
               <div className="flex items-center justify-between border-b border-[#362d59] pb-3">
                 <span className="text-xs font-semibold uppercase tracking-[0.2px] text-[#79628c]">
@@ -226,33 +233,53 @@ export default function VerifyPage({
               </div>
 
               <div className="flex flex-col gap-3">
+                {/* Validation risk */}
                 <div>
                   <div className="flex justify-between text-xs mb-1">
                     <span className="text-[#bdb8c0]">Document Format &amp; Rule Risk</span>
                     <span className="font-mono text-[#ffffff]">{verificationResult.riskBreakdown?.validation_risk ?? 0}%</span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-[#1f1633] overflow-hidden border border-[#362d59]">
-                    <div className="h-full bg-[#79628c]" style={{ width: `${Math.min(100, verificationResult.riskBreakdown?.validation_risk ?? 0)}%` }} />
+                    <div
+                      className="h-full bg-[#79628c] transition-all duration-500"
+                      style={{ width: `${Math.min(100, verificationResult.riskBreakdown?.validation_risk ?? 0)}%` }}
+                    />
                   </div>
                 </div>
 
+                {/* Tampering risk — value is already 0-100, no *10 */}
                 <div>
                   <div className="flex justify-between text-xs mb-1">
                     <span className="text-[#bdb8c0]">Digital Tampering &amp; Splicing Anomaly</span>
-                    <span className="font-mono text-[#ffffff]">{verificationResult.riskBreakdown?.tampering_risk ?? (verificationResult.modules?.tampering?.tamper_score ?? 0)}%</span>
+                    <span className="font-mono text-[#ffffff]">
+                      {verificationResult.riskBreakdown?.tampering_risk ?? verificationResult.modules?.tampering?.tamper_score ?? 0}%
+                    </span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-[#1f1633] overflow-hidden border border-[#362d59]">
-                    <div className="h-full bg-[#c2ef4e]" style={{ width: `${Math.min(100, (verificationResult.riskBreakdown?.tampering_risk ?? verificationResult.modules?.tampering?.tamper_score ?? 0) * 10)}%` }} />
+                    <div
+                      className="h-full bg-[#c2ef4e] transition-all duration-500"
+                      style={{
+                        width: `${Math.min(100, verificationResult.riskBreakdown?.tampering_risk ?? verificationResult.modules?.tampering?.tamper_score ?? 0)}%`,
+                      }}
+                    />
                   </div>
                 </div>
 
+                {/* Face match risk */}
                 <div>
                   <div className="flex justify-between text-xs mb-1">
                     <span className="text-[#bdb8c0]">Biometric Facial Mismatch Risk</span>
-                    <span className="font-mono text-[#ffffff]">{verificationResult.riskBreakdown?.face_match_risk ?? (100 - (faceScore ?? 100))}%</span>
+                    <span className="font-mono text-[#ffffff]">
+                      {verificationResult.riskBreakdown?.face_match_risk ?? Math.max(0, 100 - (faceScore ?? 100))}%
+                    </span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-[#1f1633] overflow-hidden border border-[#362d59]">
-                    <div className="h-full bg-[#fa7faa]" style={{ width: `${Math.min(100, verificationResult.riskBreakdown?.face_match_risk ?? (100 - (faceScore ?? 100)))}%` }} />
+                    <div
+                      className="h-full bg-[#fa7faa] transition-all duration-500"
+                      style={{
+                        width: `${Math.min(100, verificationResult.riskBreakdown?.face_match_risk ?? Math.max(0, 100 - (faceScore ?? 100)))}%`,
+                      }}
+                    />
                   </div>
                 </div>
               </div>
@@ -262,7 +289,7 @@ export default function VerifyPage({
           {/* COMPLETE TECHNICAL JSON ACCORDION */}
           <details className="mt-2">
             <summary className="cursor-pointer text-xs font-semibold uppercase tracking-[0.2px] text-[#79628c] hover:text-[#ffffff] transition-colors">
-              Show raw computer report (for programmers)
+              Show raw computer report (for developers)
             </summary>
             <pre className="mt-3 overflow-auto rounded-md bg-[#150f23] border border-[#362d59] p-4 text-xs font-mono text-[#bdb8c0]">
               {JSON.stringify(verificationResult, null, 2)}

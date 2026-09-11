@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { verifyDocument } from '../api/verificationApi';
 import { RECOMMENDATION_TO_STATUS } from '../constants';
 import { formatCurrentTime } from '../utils/formatters';
+import { useVerificationProgress } from './useVerificationProgress';
 
 export function useDocumentVerification() {
   const [documentFile, setDocumentFile] = useState(null);
@@ -14,6 +15,19 @@ export function useDocumentVerification() {
   const [history, setHistory] = useState([]);
 
   const previewUrlRef = useRef(null);
+
+  // ── Progress tracking ──────────────────────────────────────────────────
+  const {
+    progress,
+    stage,
+    stageLabel,
+    stageDetail,
+    stageIdx,
+    isComplete: progressComplete,
+    startProgress,
+    completeProgress,
+    resetProgress,
+  } = useVerificationProgress();
 
   // Revoke object URL on unmount or URL replacement to prevent memory leaks
   useEffect(() => {
@@ -42,6 +56,7 @@ export function useDocumentVerification() {
     setDocumentPreviewUrl(newPreviewUrl);
     setVerificationResult(null);
     setError('');
+    resetProgress();
   };
 
   const handleLivePhotoChange = (event) => {
@@ -49,6 +64,7 @@ export function useDocumentVerification() {
     setLivePhotoFile(file);
     setVerificationResult(null);
     setError('');
+    resetProgress();
   };
 
   const handleVerify = async () => {
@@ -66,9 +82,11 @@ export function useDocumentVerification() {
     }
 
     setIsVerifying(true);
+    startProgress();   // kick off the animated progress simulation
 
     try {
       const data = await verifyDocument({ documentFile, livePhotoFile });
+      completeProgress();    // jump to 100 %
       setVerificationResult(data);
 
       const status =
@@ -77,19 +95,17 @@ export function useDocumentVerification() {
         'Review';
 
       const historyRow = {
-        id: data?.docId || data?.requestId || `DOC-${Date.now()}`,
+        id:   data?.docId || data?.requestId || `DOC-${Date.now()}`,
         type: data?.docType || 'Government ID',
         time: formatCurrentTime(),
-        risk:
-          typeof data?.riskScore === 'number'
-            ? Math.round(data.riskScore)
-            : 0,
+        risk: typeof data?.riskScore === 'number' ? Math.round(data.riskScore) : 0,
         status,
       };
 
       setHistory((prev) => [historyRow, ...prev].slice(0, 6));
     } catch (err) {
       console.error('Verification error:', err);
+      resetProgress();
       setError(err?.message || 'Unable to connect to the verification backend.');
     } finally {
       setIsVerifying(false);
@@ -107,5 +123,11 @@ export function useDocumentVerification() {
     handleDocumentChange,
     handleLivePhotoChange,
     handleVerify,
+    // Progress state (forwarded to pages)
+    progress,
+    stageLabel,
+    stageDetail,
+    stageIdx,
+    progressComplete,
   };
 }

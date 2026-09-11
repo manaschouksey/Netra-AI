@@ -127,6 +127,12 @@ export default function App() {
     handleDocumentChange,
     handleLivePhotoChange,
     handleVerify,
+    // Progress
+    progress,
+    stageLabel,
+    stageDetail,
+    stageIdx,
+    progressComplete,
   } = useDocumentVerification();
 
   const handleFaceResult = (result) => {
@@ -170,6 +176,11 @@ export default function App() {
             faceStatus={faceStatus}
             extractedInfoRows={extractedInfoRows}
             history={history}
+            progress={progress}
+            stageLabel={stageLabel}
+            stageDetail={stageDetail}
+            stageIdx={stageIdx}
+            progressComplete={progressComplete}
           />
         )}
 

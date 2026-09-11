@@ -92,10 +92,10 @@ async def verify_document_endpoint(
         face_result = {
             "face_detected_on_document": True,
             "face_detected_on_live_photo": True if live_photo_bytes else None,
-            "match": True if live_photo_bytes else None,
-            "similarity_score": 85.0 if live_photo_bytes else None,
-            "method": "graceful_fallback",
-            "notes": "Face evaluation completed via safe fallback.",
+            "match": False if live_photo_bytes else None,
+            "similarity_score": 0.0 if live_photo_bytes else None,
+            "method": "exception_fallback",
+            "notes": f"Face evaluation encountered exception: {exc}",
         }
 
     # 7. Face metrics extraction

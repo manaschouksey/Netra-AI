@@ -1,9 +1,11 @@
 import React, { useState, useRef } from 'react';
 import FaceDetector from '../face-detector/FaceDetector';
-import { Camera, Upload, CheckCircle2, AlertTriangle, RefreshCw, Shield, Sparkles, UserCheck, ArrowRight, Sun, Eye, Lock } from 'lucide-react';
+import { Camera, Upload, CheckCircle2, AlertTriangle, RefreshCw, UserCheck, ArrowRight, Sun, Eye, Lock } from 'lucide-react';
 import { ALLOWED_DOC_EXTENSIONS } from '../../constants';
 import { verifyDocument } from '../../api/verificationApi';
 import { formatScore, formatPercentage } from '../../utils/formatters';
+import VerificationProgressBar from '../common/VerificationProgressBar';
+import { useVerificationProgress } from '../../hooks/useVerificationProgress';
 
 export default function FaceCheckPage({ faceResult, onFaceResult }) {
   const [docFile, setDocFile] = useState(null);
@@ -15,6 +17,12 @@ export default function FaceCheckPage({ faceResult, onFaceResult }) {
 
   const captureFnRef = useRef(null);
 
+  const {
+    progress, stageLabel, stageDetail, stageIdx,
+    isComplete: progressComplete,
+    startProgress, completeProgress, resetProgress,
+  } = useVerificationProgress();
+
   const handleDocChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -22,6 +30,7 @@ export default function FaceCheckPage({ faceResult, onFaceResult }) {
       setDocPreview(URL.createObjectURL(file));
       setMatchResult(null);
       setMatchError(null);
+      resetProgress();
     }
   };
 
@@ -49,6 +58,7 @@ export default function FaceCheckPage({ faceResult, onFaceResult }) {
 
     setIsMatching(true);
     setMatchError(null);
+    startProgress();
 
     try {
       // 1. Capture high-res snapshot immediately from mirrored selfie camera
@@ -62,9 +72,11 @@ export default function FaceCheckPage({ faceResult, onFaceResult }) {
 
       // 2. Call backend verification endpoint
       const res = await verifyDocument({ documentFile: docFile, livePhotoFile: selfieBlob });
+      completeProgress();
       setMatchResult(res);
     } catch (err) {
       console.error('Biometric matching failed:', err);
+      resetProgress();
       setMatchError(err.message || 'Face matching failed. Please try again.');
     } finally {
       setIsMatching(false);
@@ -92,27 +104,15 @@ export default function FaceCheckPage({ faceResult, onFaceResult }) {
         </p>
       </div>
 
-      {/* IMMEDIATE NOTICE: IMAGE CAPTURED — USER CAN MOVE AWAY */}
-      {isImageCaptured && isMatching && (
-        <div className="p-5 rounded-2xl bg-[#150f23] border border-[#c2ef4e] flex items-center justify-between flex-wrap gap-4 shadow-xl animate-fade-in-up">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-[#1f1633] border border-[#c2ef4e]/40 grid place-items-center text-[#c2ef4e] shrink-0">
-              <Camera size={24} className="animate-pulse" />
-            </div>
-            <div>
-              <h3 className="text-base font-bold text-[#c2ef4e] m-0">
-                📸 Selfie Captured Successfully!
-              </h3>
-              <p className="text-xs sm:text-sm text-[#ffffff] mt-1 m-0 font-normal leading-relaxed">
-                <strong>You can move out of the screen now.</strong> Our AI is extracting text, analyzing forensic tampering, and performing neural face matching in the background.
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-[#c2ef4e] bg-[#1f1633] px-3 py-1.5 rounded-lg border border-[#362d59]">
-            <RefreshCw size={14} className="animate-spin" />
-            <span>Verifying...</span>
-          </div>
-        </div>
+      {/* REAL-TIME PROGRESS BAR — shown while matching */}
+      {(isMatching || (progressComplete && !matchResult)) && (
+        <VerificationProgressBar
+          progress={progress}
+          stageLabel={stageLabel}
+          stageDetail={stageDetail}
+          stageIdx={stageIdx}
+          isComplete={progressComplete}
+        />
       )}
 
       {/* 2-COLUMN BIOMETRIC MATCHING WORKSPACE */}
@@ -409,15 +409,15 @@ export default function FaceCheckPage({ faceResult, onFaceResult }) {
                 <div className="flex flex-col gap-2 text-xs">
                   <div className="flex justify-between border-b border-[#362d59]/50 pb-1.5">
                     <span className="text-[#79628c]">Document Number:</span>
-                    <span className="font-semibold text-[#ffffff]">{matchResult.modules?.ocr?.document_number || matchResult.docId || 'DOC-9823412'}</span>
+                    <span className="font-semibold text-[#ffffff]">{matchResult.modules?.ocr?.document_number || matchResult.docId || '—'}</span>
                   </div>
                   <div className="flex justify-between border-b border-[#362d59]/50 pb-1.5">
                     <span className="text-[#79628c]">Full Name:</span>
-                    <span className="font-semibold text-[#ffffff]">{matchResult.modules?.ocr?.name || 'Verified Subject'}</span>
+                    <span className="font-semibold text-[#ffffff]">{matchResult.modules?.ocr?.name || '—'}</span>
                   </div>
                   <div className="flex justify-between border-b border-[#362d59]/50 pb-1.5">
                     <span className="text-[#79628c]">Date of Birth:</span>
-                    <span className="font-semibold text-[#ffffff]">{matchResult.modules?.ocr?.date_of_birth || 'Present & Validated'}</span>
+                    <span className="font-semibold text-[#ffffff]">{matchResult.modules?.ocr?.date_of_birth || '—'}</span>
                   </div>
                   <div className="flex justify-between border-b border-[#362d59]/50 pb-1.5">
                     <span className="text-[#79628c]">OCR Confidence:</span>
@@ -449,7 +449,7 @@ export default function FaceCheckPage({ faceResult, onFaceResult }) {
                       <span className="font-semibold text-[#ffffff]">{matchResult.riskBreakdown?.tampering_risk ?? 0}%</span>
                     </div>
                     <div className="w-full h-1.5 rounded-full bg-[#150f23] overflow-hidden border border-[#362d59]">
-                      <div className="h-full bg-[#c2ef4e]" style={{ width: `${Math.min(100, (matchResult.riskBreakdown?.tampering_risk ?? 0) * 10)}%` }} />
+                      <div className="h-full bg-[#c2ef4e] transition-all duration-500" style={{ width: `${Math.min(100, matchResult.riskBreakdown?.tampering_risk ?? 0)}%` }} />
                     </div>
                   </div>
 
