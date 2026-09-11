@@ -56,7 +56,7 @@ export default function FaceCheckPage({ faceResult, onFaceResult }) {
       setCapturedSelfiePreview(URL.createObjectURL(selfieBlob));
 
       // 2. Call backend verification endpoint
-      const res = await verifyDocument(docFile, selfieBlob);
+      const res = await verifyDocument({ documentFile: docFile, livePhotoFile: selfieBlob });
       setMatchResult(res);
     } catch (err) {
       console.error('Biometric matching failed:', err);
