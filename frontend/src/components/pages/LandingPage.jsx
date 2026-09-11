@@ -100,7 +100,7 @@ export default function LandingPage({ onNavigate }) {
       </section>
 
       {/* CONTINUOUS ARCHITECTURE RIBBON (REPLACING VIBECODED 4 CARDS) */}
-      <section className="rounded-2xl border border-[#362d59] bg-[#150f23] overflow-hidden">
+      <section id="features" className="rounded-2xl border border-[#362d59] bg-[#150f23] overflow-hidden">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#362d59]">
           {/* SEGMENT 1 */}
           <div className="p-6 sm:p-7 flex flex-col gap-3">
@@ -161,7 +161,7 @@ export default function LandingPage({ onNavigate }) {
       </section>
 
       {/* HOW IT WORKS (STEP PIPELINE RUNWAY) */}
-      <section className="flex flex-col gap-8">
+      <section id="how-it-works" className="flex flex-col gap-8">
         <div className="flex flex-col gap-2">
           <div className="text-xs font-semibold uppercase tracking-wider text-[#79628c]">
             Simple 3-Step Verification
@@ -170,7 +170,7 @@ export default function LandingPage({ onNavigate }) {
             How It Works
           </h2>
           <p className="text-sm sm:text-base text-[#bdb8c0] m-0 font-normal">
-            Checking an ID is as easy as 1, 2, 3.
+            Verification designed for anyone to understand in 5 seconds.
           </p>
         </div>
 
@@ -211,7 +211,7 @@ export default function LandingPage({ onNavigate }) {
       </section>
 
       {/* WHAT OUR AI DOES (3 FORENSIC PILLARS) */}
-      <section className="flex flex-col gap-8">
+      <section id="forensics" className="flex flex-col gap-8">
         <div className="flex flex-col gap-2">
           <div className="text-xs font-semibold uppercase tracking-wider text-[#79628c]">
             Built-In Verification Powers

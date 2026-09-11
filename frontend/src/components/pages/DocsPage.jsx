@@ -19,7 +19,7 @@ export default function DocsPage({ onNavigate }) {
       </div>
 
       {/* SECTION 1: THE 3 COLOR SIGNALS (SUPER EASY EXPLANATION) */}
-      <section className="bg-[#150f23] border border-[#362d59] rounded-xl p-6 md:p-8 flex flex-col gap-6">
+      <section id="signals" className="bg-[#150f23] border border-[#362d59] rounded-xl p-6 md:p-8 flex flex-col gap-6">
         <div>
           <h2 className="text-xl font-bold text-[#ffffff] m-0">The 3 Color Signals (Super Easy!)</h2>
           <p className="text-xs text-[#bdb8c0] mt-1 m-0">
@@ -64,7 +64,7 @@ export default function DocsPage({ onNavigate }) {
       </section>
 
       {/* SECTION 2: DEVELOPER QUICK-CONNECT (MONACO CODE BLOCK) */}
-      <section className="bg-[#150f23] border border-[#362d59] rounded-xl p-6 md:p-8 flex flex-col gap-5">
+      <section id="api" className="bg-[#150f23] border border-[#362d59] rounded-xl p-6 md:p-8 flex flex-col gap-5">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <div>
             <h2 className="text-xl font-bold text-[#ffffff] m-0">Connect to Your Website or App</h2>
@@ -92,7 +92,7 @@ export default function DocsPage({ onNavigate }) {
       </section>
 
       {/* SECTION 3: TEST SAMPLES YOU CAN TRY */}
-      <section className="bg-[#150f23] border border-[#362d59] rounded-xl p-6 md:p-8 flex flex-col gap-6">
+      <section id="supported-ids" className="bg-[#150f23] border border-[#362d59] rounded-xl p-6 md:p-8 flex flex-col gap-6">
         <div>
           <h2 className="text-xl font-bold text-[#ffffff] m-0">What Government IDs Are Supported?</h2>
           <p className="text-xs text-[#bdb8c0] mt-1 m-0">

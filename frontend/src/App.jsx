@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Navigation
 import Topbar from './components/layout/Topbar';
@@ -71,6 +71,52 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('Home');
   const [faceDetectionResult, setFaceDetectionResult] = useState(null);
 
+  // Central Navigation Handler: Always scrolls to top or target area
+  const handleNavigate = (tab, target) => {
+    setActiveTab(tab);
+    if (target) {
+      setTimeout(() => {
+        const id = target.startsWith('#') ? target.slice(1) : target;
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          return;
+        }
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      }, 50);
+    } else {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }
+  };
+
+  // Scroll to top automatically whenever activeTab changes
+  useEffect(() => {
+    if (window.location.hash) {
+      const id = window.location.hash.slice(1);
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [activeTab]);
+
+  // Listen to hash changes for smooth scrolling to specific anchor targets
+  useEffect(() => {
+    const handleHashChange = () => {
+      if (window.location.hash) {
+        const id = window.location.hash.slice(1);
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
   const {
     documentFile,
     livePhotoFile,
@@ -98,7 +144,7 @@ export default function App() {
       {/* TOP NAVIGATION */}
       <Topbar
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={handleNavigate}
         theme={theme}
         setTheme={setTheme}
       />
@@ -106,7 +152,7 @@ export default function App() {
       {/* DEDICATED PAGE VIEWS */}
       <main className="flex-1 w-full" id="main-content">
         {activeTab === 'Home' && (
-          <LandingPage onNavigate={setActiveTab} />
+          <LandingPage onNavigate={handleNavigate} />
         )}
 
         {activeTab === 'Verify ID' && (
@@ -135,13 +181,13 @@ export default function App() {
         )}
 
         {activeTab === 'Docs' && (
-          <DocsPage onNavigate={setActiveTab} />
+          <DocsPage onNavigate={handleNavigate} />
         )}
       </main>
 
       {/* LIME SQUIGGLY DIVIDER & CLEAN FOOTER */}
       <LimeSquiggleDivider />
-      <AppFooter onNavigate={setActiveTab} />
+      <AppFooter onNavigate={handleNavigate} />
     </div>
   );
 }

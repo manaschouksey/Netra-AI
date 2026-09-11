@@ -12,8 +12,8 @@ const NAV_LINKS = [
 export default function Topbar({ activeTab, onTabChange, theme, setTheme }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleNavClick = (id) => {
-    onTabChange(id);
+  const handleNavClick = (id, target) => {
+    onTabChange(id, target);
     setMobileMenuOpen(false);
   };
 
