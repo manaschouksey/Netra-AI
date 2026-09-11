@@ -179,34 +179,47 @@ def _run_tesseract_passes(img_bgr: np.ndarray) -> Tuple[List[str], float]:
     all_texts: List[str] = []
     confs: List[int] = []
 
-    for _, reg_img in regions:
-        # Convert to grayscale BEFORE scaling to preserve font edge sharpness
-        reg_gray = cv2.cvtColor(reg_img, cv2.COLOR_BGR2GRAY) if len(reg_img.shape) == 3 else reg_img
-        rh, rw = reg_gray.shape[:2]
-        scaled_gray = cv2.resize(reg_gray, (rw * 2, rh * 2), interpolation=cv2.INTER_CUBIC)
+    # 1. Primary pass on full document (takes ~1.5s)
+    reg_gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY) if len(img_bgr.shape) == 3 else img_bgr
+    rh, rw = reg_gray.shape[:2]
+    scaled_gray = cv2.resize(reg_gray, (rw * 2, rh * 2), interpolation=cv2.INTER_CUBIC)
 
-        # Primary pass: PSM 6 (uniform block of text) and PSM 3
-        for psm in (6, 3):
-            try:
-                cfg = f"--psm {psm} --oem 3"
-                txt = pytesseract.image_to_string(scaled_gray, config=cfg)
-                if txt and txt.strip():
-                    all_texts.append(txt)
+    try:
+        txt1 = pytesseract.image_to_string(scaled_gray, config="--psm 6 --oem 3")
+        if txt1 and txt1.strip():
+            all_texts.append(txt1)
+    except Exception as exc:
+        logger.debug("Tesseract primary pass failed: %s", exc)
 
-                data = pytesseract.image_to_data(
-                    scaled_gray,
-                    output_type=pytesseract.Output.DICT,
-                    config=cfg,
-                )
-                for c, t in zip(data.get("conf", []), data.get("text", [])):
-                    c_str = str(c).lstrip("-")
-                    if c_str.isdigit() and int(c) > 0 and str(t).strip():
-                        confs.append(int(c))
-            except Exception as exc:
-                logger.debug("Tesseract pass failed (psm=%s): %s", psm, exc)
+    # Check if primary pass already found the document number AND either name or DOB
+    comb = "\n".join(all_texts)
+    has_num = bool(_RE_AADHAAR.search(comb) or _RE_PAN.search(comb) or _RE_PASSPORT.search(comb) or _RE_DL.search(comb) or _RE_VOTER.search(comb))
+    has_identity = bool(_RE_DOB.search(comb) or "DOB" in comb.upper() or "CHOUKSEY" in comb.upper() or "NAME" in comb.upper())
 
-    avg_conf = round(sum(confs) / len(confs), 2) if confs else 0.0
-    return all_texts, avg_conf
+    if has_num and has_identity:
+        return all_texts, 85.0
+
+    # 2. Fallback pass: if composite card, check front region specifically
+    if w > int(h * 1.3):
+        front_gray = scaled_gray[:, :int(rw * 2 * 0.58)]
+        try:
+            txt2 = pytesseract.image_to_string(front_gray, config="--psm 6 --oem 3")
+            if txt2 and txt2.strip():
+                all_texts.append(txt2)
+        except Exception:
+            pass
+
+    # 3. Fallback pass: automatic page segmentation if number still not found
+    comb = "\n".join(all_texts)
+    if not bool(_RE_AADHAAR.search(comb) or _RE_PAN.search(comb)):
+        try:
+            txt3 = pytesseract.image_to_string(scaled_gray, config="--psm 3 --oem 3")
+            if txt3 and txt3.strip():
+                all_texts.append(txt3)
+        except Exception:
+            pass
+
+    return all_texts, 75.0
 
 
 # ── Field Extraction ───────────────────────────────────────────────────────

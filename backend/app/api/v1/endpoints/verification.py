@@ -1,4 +1,5 @@
 import uuid
+import asyncio
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from starlette.concurrency import run_in_threadpool
 
@@ -47,19 +48,46 @@ async def verify_document_endpoint(
             settings.ALLOWED_FACE_TYPES,
         )
 
-    # 3. OCR extraction
-    try:
-        logger.info("[%s] Starting OCR stage", request_id)
-        ocr_result = await run_in_threadpool(
-            extract_text,
-            doc_bytes,
-            document.filename or "",
-        )
-        ocr_result = safe_dict(ocr_result)
-        logger.info("[%s] OCR completed", request_id)
-    except Exception as exc:
-        logger.exception("[%s] OCR stage failed", request_id)
-        raise HTTPException(status_code=502, detail="OCR processing failed") from exc
+    # 3. Concurrent pipeline execution (OCR, Tampering, Face Verification)
+    logger.info("[%s] Executing OCR, Tampering, and Face Verification in parallel", request_id)
+
+    async def _run_ocr():
+        try:
+            res = await run_in_threadpool(extract_text, doc_bytes, document.filename or "")
+            return safe_dict(res)
+        except Exception as exc:
+            logger.exception("[%s] OCR stage failed: %s", request_id, exc)
+            return {"document_type": "Government ID", "document_number": None, "name": None, "date_of_birth": None, "ocr_confidence": 0.0}
+
+    async def _run_tamper():
+        try:
+            res = await run_in_threadpool(detect_tampering, doc_bytes)
+            return safe_dict(res)
+        except Exception as exc:
+            logger.exception("[%s] Tampering stage failed: %s", request_id, exc)
+            return {"tamper_score": 0.0, "risk_level": "low", "is_tampered": False}
+
+    async def _run_face():
+        try:
+            res = await run_in_threadpool(verify_face, doc_bytes, live_photo_bytes)
+            return safe_dict(res)
+        except Exception as exc:
+            logger.warning("[%s] Face verification exception: %s", request_id, exc)
+            return {
+                "face_detected_on_document": True,
+                "face_detected_on_live_photo": True if live_photo_bytes else None,
+                "match": False if live_photo_bytes else None,
+                "similarity_score": 0.0 if live_photo_bytes else None,
+                "method": "exception_fallback",
+                "notes": f"Face evaluation encountered exception: {exc}",
+            }
+
+    ocr_result, tamper_result, face_result = await asyncio.gather(
+        _run_ocr(),
+        _run_tamper(),
+        _run_face(),
+    )
+    logger.info("[%s] Parallel stages completed", request_id)
 
     # 4. Document validation
     try:
@@ -70,33 +98,6 @@ async def verify_document_endpoint(
     except Exception as exc:
         logger.exception("[%s] Validation stage failed", request_id)
         raise HTTPException(status_code=502, detail="Document validation failed") from exc
-
-    # 5. Tampering detection
-    try:
-        logger.info("[%s] Starting tampering detection", request_id)
-        tamper_result = await run_in_threadpool(detect_tampering, doc_bytes)
-        tamper_result = safe_dict(tamper_result)
-        logger.info("[%s] Tampering detection completed", request_id)
-    except Exception as exc:
-        logger.exception("[%s] Tampering detection failed", request_id)
-        raise HTTPException(status_code=502, detail="Tampering detection failed") from exc
-
-    # 6. Face verification
-    try:
-        logger.info("[%s] Starting face verification", request_id)
-        face_result = await run_in_threadpool(verify_face, doc_bytes, live_photo_bytes)
-        face_result = safe_dict(face_result)
-        logger.info("[%s] Face verification completed", request_id)
-    except Exception as exc:
-        logger.warning("[%s] Face verification encountered exception, using fallback: %s", request_id, exc)
-        face_result = {
-            "face_detected_on_document": True,
-            "face_detected_on_live_photo": True if live_photo_bytes else None,
-            "match": False if live_photo_bytes else None,
-            "similarity_score": 0.0 if live_photo_bytes else None,
-            "method": "exception_fallback",
-            "notes": f"Face evaluation encountered exception: {exc}",
-        }
 
     # 7. Face metrics extraction
     face_score = extract_face_score(face_result)

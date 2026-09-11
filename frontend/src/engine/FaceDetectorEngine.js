@@ -33,7 +33,7 @@ export default class FaceDetectorEngine {
     this.config = {
       inputSize: 224,
       scoreThreshold: 0.5,
-      detectionIntervalMs: 150,
+      detectionIntervalMs: 350,
       modelUrl: "/models",
       fallbackModelUrl: "https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights",
       ...options,
@@ -69,7 +69,8 @@ export default class FaceDetectorEngine {
     this.videoElement = videoEl;
     this.canvasElement = canvasEl;
     this.canvasCtx = canvasEl.getContext("2d");
-    await this.loadModel();
+    // Load model in background non-blocking
+    this.loadModel().catch((e) => console.warn("Background face detector model load:", e));
   }
 
   /** Subscribe to continuous detection results emitted by the detection loop. */
@@ -77,13 +78,10 @@ export default class FaceDetectorEngine {
     this.resultCallback = callback;
   }
 
-  /** Request camera permission and begin streaming + detecting. */
+  /** Request camera permission and begin streaming immediately without waiting for model weights. */
   async startCamera() {
     if (!this.videoElement) {
       throw new Error("FaceDetectorEngine not initialized. Call init() first.");
-    }
-    if (!this.modelLoaded) {
-      await this.loadModel();
     }
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       throw new Error("Camera API not supported in this browser.");
@@ -91,7 +89,7 @@ export default class FaceDetectorEngine {
 
     try {
       this.mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user" },
+        video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } },
         audio: false,
       });
     } catch (err) {
@@ -108,11 +106,23 @@ export default class FaceDetectorEngine {
     this.videoElement.srcObject = this.mediaStream;
 
     await new Promise((resolve) => {
-      this.videoElement.onloadedmetadata = () => resolve();
+      if (this.videoElement.readyState >= 1) {
+        resolve();
+      } else {
+        this.videoElement.onloadedmetadata = () => resolve();
+      }
     });
 
     this.resizeCanvasToVideo();
-    this.startDetectionLoop();
+
+    // Ensure model is loading in background and start loop once ready
+    if (!this.modelLoaded) {
+      this.loadModel().then(() => {
+        if (this.mediaStream) this.startDetectionLoop();
+      }).catch(() => {});
+    } else {
+      this.startDetectionLoop();
+    }
   }
 
   /** Stop camera stream + detection loop. No frames are ever stored. */

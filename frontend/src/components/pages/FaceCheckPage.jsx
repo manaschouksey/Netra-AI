@@ -11,11 +11,13 @@ export default function FaceCheckPage({ faceResult, onFaceResult }) {
   const [docFile, setDocFile] = useState(null);
   const [docPreview, setDocPreview] = useState(null);
   const [capturedSelfiePreview, setCapturedSelfiePreview] = useState(null);
+  const [selfieFile, setSelfieFile] = useState(null);
   const [isMatching, setIsMatching] = useState(false);
   const [matchResult, setMatchResult] = useState(null);
   const [matchError, setMatchError] = useState(null);
 
   const captureFnRef = useRef(null);
+  const selfieInputRef = useRef(null);
 
   const {
     progress, stageLabel, stageDetail, stageIdx,
@@ -34,6 +36,18 @@ export default function FaceCheckPage({ faceResult, onFaceResult }) {
     }
   };
 
+  const handleSelfieFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelfieFile(file);
+      setCapturedSelfiePreview(URL.createObjectURL(file));
+      setIsImageCaptured(true);
+      setMatchResult(null);
+      setMatchError(null);
+      resetProgress();
+    }
+  };
+
   const [isImageCaptured, setIsImageCaptured] = useState(false);
 
   const handleClearDoc = () => {
@@ -42,6 +56,7 @@ export default function FaceCheckPage({ faceResult, onFaceResult }) {
     setMatchResult(null);
     setMatchError(null);
     setCapturedSelfiePreview(null);
+    setSelfieFile(null);
     setIsImageCaptured(false);
   };
 
@@ -51,9 +66,24 @@ export default function FaceCheckPage({ faceResult, onFaceResult }) {
       return;
     }
 
-    if (!captureFnRef.current) {
-      setMatchError('Webcam is not ready. Please click "Start Camera" in Step 2.');
-      return;
+    let livePhoto = selfieFile;
+    if (!livePhoto) {
+      if (!captureFnRef.current) {
+        setMatchError('Please either click "Start Camera" to capture a selfie, or click "Upload Selfie Photo".');
+        return;
+      }
+      try {
+        const selfieBlob = await captureFnRef.current();
+        if (!selfieBlob) {
+          throw new Error('Camera is not active. Click "Start Camera" or upload a selfie file.');
+        }
+        livePhoto = selfieBlob;
+        setCapturedSelfiePreview(URL.createObjectURL(selfieBlob));
+        setIsImageCaptured(true);
+      } catch (err) {
+        setMatchError(err.message || 'Could not capture photo from webcam. Please try again.');
+        return;
+      }
     }
 
     setIsMatching(true);
@@ -61,17 +91,8 @@ export default function FaceCheckPage({ faceResult, onFaceResult }) {
     startProgress();
 
     try {
-      // 1. Capture high-res snapshot immediately from mirrored selfie camera
-      const selfieBlob = await captureFnRef.current();
-      if (!selfieBlob) {
-        throw new Error('Could not capture photo from webcam. Please ensure your camera is running.');
-      }
-
-      setCapturedSelfiePreview(URL.createObjectURL(selfieBlob));
-      setIsImageCaptured(true);
-
-      // 2. Call backend verification endpoint
-      const res = await verifyDocument({ documentFile: docFile, livePhotoFile: selfieBlob });
+      // Call backend verification endpoint with doc and selfie
+      const res = await verifyDocument({ documentFile: docFile, livePhotoFile: livePhoto });
       completeProgress();
       setMatchResult(res);
     } catch (err) {
@@ -209,34 +230,59 @@ export default function FaceCheckPage({ faceResult, onFaceResult }) {
           {/* MIRRORED CAMERA OR CAPTURED FRAME */}
           <div className="w-full">
             {isImageCaptured && capturedSelfiePreview ? (
-              <div className="relative rounded-xl overflow-hidden border border-[#362d59] bg-[#000000] aspect-[16/10] flex items-center justify-center">
+              <div className="relative rounded-xl overflow-hidden border border-[#c2ef4e]/40 bg-[#000000] aspect-[16/10] flex items-center justify-center shadow-xl">
                 <img
                   src={capturedSelfiePreview}
                   alt="Captured Selfie Frame"
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute top-3 left-3 bg-[#150f23]/90 backdrop-blur-md px-3 py-1 rounded-md text-[11px] font-semibold text-[#c2ef4e] border border-[#362d59]">
-                  ✓ Captured Selfie (You may move freely)
+                <div className="absolute top-3 left-3 bg-[#150f23]/95 backdrop-blur-md px-3.5 py-1.5 rounded-lg text-xs font-bold text-[#c2ef4e] border border-[#c2ef4e]/50 shadow-lg flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#c2ef4e] animate-ping" />
+                  <span>✓ Photo Captured! You can move away from screen now.</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => {
                     setIsImageCaptured(false);
+                    setCapturedSelfiePreview(null);
+                    setSelfieFile(null);
                     setMatchResult(null);
                   }}
-                  className="absolute bottom-3 right-3 bg-[#150f23]/90 hover:bg-[#1f1633] px-3 py-1 rounded-md text-xs text-[#fa7faa] border border-[#362d59] transition-colors"
+                  className="absolute bottom-3 right-3 bg-[#150f23]/90 hover:bg-[#1f1633] px-3 py-1.5 rounded-md text-xs font-semibold text-[#fa7faa] border border-[#362d59] transition-colors"
                 >
                   Retake Photo
                 </button>
               </div>
             ) : (
-              <FaceDetector
-                onResult={onFaceResult}
-                onCaptureReady={(fn) => {
-                  captureFnRef.current = fn;
-                }}
-                autoStart={false}
-              />
+              <div className="flex flex-col gap-3">
+                <FaceDetector
+                  onResult={onFaceResult}
+                  onCaptureReady={(fn) => {
+                    captureFnRef.current = fn;
+                  }}
+                  autoStart={false}
+                />
+                <div className="flex items-center gap-3">
+                  <div className="h-[1px] bg-[#362d59] flex-1" />
+                  <span className="text-[10px] uppercase font-bold text-[#79628c] tracking-widest">OR</span>
+                  <div className="h-[1px] bg-[#362d59] flex-1" />
+                </div>
+                <input
+                  type="file"
+                  ref={selfieInputRef}
+                  accept={ALLOWED_DOC_EXTENSIONS}
+                  onChange={handleSelfieFileChange}
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => selfieInputRef.current?.click()}
+                  className="w-full py-2.5 px-4 rounded-xl border border-dashed border-[#362d59] hover:border-[#c2ef4e]/60 bg-[#1f1633] text-xs font-semibold text-[#ffffff] flex items-center justify-center gap-2 transition-all hover:bg-[#150f23] cursor-pointer"
+                >
+                  <Upload size={14} className="text-[#c2ef4e]" />
+                  <span>Upload Reference Selfie Photo Directly</span>
+                </button>
+              </div>
             )}
           </div>
 

@@ -28,7 +28,7 @@ export const STAGES = [
   { id: 4, from: 87, to: 99, label: 'Computing composite risk score...',                detail: 'Weighting validation + tampering + face signals' },
 ];
 
-const STAGE_DURATIONS_MS = [800, 2200, 1800, 3500, 1000];   // approx real backend timings
+const STAGE_DURATIONS_MS = [200, 350, 250, 400, 200];   // fast snappy telemetry aligned with optimized backend
 
 export function useVerificationProgress() {
   const [progress, setProgress] = useState(0);
@@ -74,8 +74,7 @@ export function useVerificationProgress() {
     const stage = STAGES[idx];
     setStageIdx(idx);
     _animateStage(stage.from, stage.to, STAGE_DURATIONS_MS[idx], () => {
-      // Small gap between stages
-      timerRef.current = setTimeout(() => _runStage(idx + 1), 120);
+      timerRef.current = setTimeout(() => _runStage(idx + 1), 60);
     });
   }, [_animateStage]);
 
@@ -85,26 +84,15 @@ export function useVerificationProgress() {
     setIsComplete(false);
     setProgress(0);
     setStageIdx(-1);
-    // Tiny delay before starting so the UI has rendered
-    timerRef.current = setTimeout(() => _runStage(0), 60);
+    timerRef.current = setTimeout(() => _runStage(0), 30);
   }, [_runStage]);
 
   const completeProgress = useCallback(() => {
     _clearAll();
     activeRef.current = false;
-    setStageIdx(STAGES.length);     // past all stages
-    // Animate quickly to 100 %
-    setProgress((prev) => {
-      const fill = () => {
-        setProgress((p) => {
-          if (p >= 100) { setIsComplete(true); return 100; }
-          rafRef.current = requestAnimationFrame(fill);
-          return Math.min(100, p + 3);
-        });
-      };
-      rafRef.current = requestAnimationFrame(fill);
-      return prev;
-    });
+    setStageIdx(STAGES.length);
+    setProgress(100);
+    setIsComplete(true);
   }, []);
 
   const resetProgress = useCallback(() => {
