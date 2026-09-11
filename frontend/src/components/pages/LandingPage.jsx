@@ -22,7 +22,7 @@ export default function LandingPage({ onNavigate }) {
         <div className="lg:col-span-7 flex flex-col gap-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md border border-[#362d59] bg-[#150f23] text-xs font-semibold uppercase tracking-[0.25px] text-[#79628c] w-fit">
             <span className="w-2 h-2 rounded-full bg-[#c2ef4e] animate-pulse-glow" />
-            Smart Robot ID Checker
+            Smart AI Identity Checker
           </div>
 
           <h1 className="text-[36px] sm:text-[54px] md:text-[68px] font-bold text-[#ffffff] tracking-tight leading-[1.06] m-0">
@@ -30,7 +30,7 @@ export default function LandingPage({ onNavigate }) {
           </h1>
 
           <p className="text-[16px] sm:text-[19px] text-[#bdb8c0] max-w-[640px] leading-relaxed font-normal m-0">
-            Upload any passport or ID card. Our smart robot reads the letters, inspects the picture, and tells you right away if it is 100% real or completely made up.
+            Upload any passport or ID card. Our smart AI reads the letters, inspects the picture, and tells you right away if it is 100% real or completely made up.
           </p>
 
           <div className="flex items-center gap-3 sm:gap-4 flex-wrap mt-2">
@@ -61,8 +61,8 @@ export default function LandingPage({ onNavigate }) {
                 <span className="w-3 h-3 rounded-full bg-[#fa7faa]/40 border border-[#fa7faa]/70" />
                 <span className="w-3 h-3 rounded-full bg-[#c2ef4e]/40 border border-[#c2ef4e]/70" />
                 <span className="w-3 h-3 rounded-full bg-[#79628c]/40 border border-[#79628c]/70" />
-                <span className="ml-2 font-mono text-[11px] text-[#79628c] uppercase tracking-[0.2px]">
-                  terminal // verify-document
+                <span className="ml-2 font-sans font-semibold text-[11px] text-[#79628c] uppercase tracking-wider">
+                  API Verification Request
                 </span>
               </div>
               <button
@@ -105,8 +105,8 @@ export default function LandingPage({ onNavigate }) {
           {/* SEGMENT 1 */}
           <div className="p-6 sm:p-7 flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-mono text-[#79628c]">01 // API_GATEWAY</span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#1f1633] text-[#c2ef4e] border border-[#362d59]">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#79628c]">01 • Live API Gateway</span>
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-[#1f1633] text-[#c2ef4e] border border-[#362d59]">
                 OPERATIONAL
               </span>
             </div>
@@ -119,8 +119,8 @@ export default function LandingPage({ onNavigate }) {
           {/* SEGMENT 2 */}
           <div className="p-6 sm:p-7 flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-mono text-[#79628c]">02 // OCR_PIPELINE</span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#1f1633] text-[#c2ef4e] border border-[#362d59]">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#79628c]">02 • OCR Text Engine</span>
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-[#1f1633] text-[#c2ef4e] border border-[#362d59]">
                 ACTIVE
               </span>
             </div>
@@ -133,8 +133,8 @@ export default function LandingPage({ onNavigate }) {
           {/* SEGMENT 3 */}
           <div className="p-6 sm:p-7 flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-mono text-[#79628c]">03 // BIOMETRIC_MATCH</span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#1f1633] text-[#c2ef4e] border border-[#362d59]">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#79628c]">03 • Biometric Face Match</span>
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-[#1f1633] text-[#c2ef4e] border border-[#362d59]">
                 READY
               </span>
             </div>
@@ -147,8 +147,8 @@ export default function LandingPage({ onNavigate }) {
           {/* SEGMENT 4 */}
           <div className="p-6 sm:p-7 flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-mono text-[#79628c]">04 // SECURITY_RAM</span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#1f1633] text-[#c2ef4e] border border-[#362d59]">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#79628c]">04 • Ephemeral RAM Memory</span>
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-[#1f1633] text-[#c2ef4e] border border-[#362d59]">
                 ENFORCED
               </span>
             </div>
@@ -163,8 +163,8 @@ export default function LandingPage({ onNavigate }) {
       {/* HOW IT WORKS (STEP PIPELINE RUNWAY) */}
       <section className="flex flex-col gap-8">
         <div className="flex flex-col gap-2">
-          <div className="text-xs font-mono uppercase tracking-[0.25px] text-[#79628c]">
-            VERIFICATION FLOW // PIPELINE
+          <div className="text-xs font-semibold uppercase tracking-wider text-[#79628c]">
+            Simple 3-Step Verification
           </div>
           <h2 className="text-[28px] sm:text-[38px] font-bold text-[#ffffff] m-0">
             How It Works
@@ -177,7 +177,7 @@ export default function LandingPage({ onNavigate }) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* STEP 1 */}
           <div className="bg-[#150f23] border border-[#362d59] rounded-2xl p-7 flex flex-col gap-4 relative overflow-hidden">
-            <div className="w-10 h-10 rounded-xl bg-[#1f1633] border border-[#362d59] text-sm font-mono font-bold grid place-items-center text-[#c2ef4e]">
+            <div className="w-10 h-10 rounded-xl bg-[#1f1633] border border-[#362d59] text-sm font-sans font-bold grid place-items-center text-[#c2ef4e]">
               01
             </div>
             <h3 className="text-lg font-bold text-[#ffffff] m-0">Take a photo of the card</h3>
@@ -188,10 +188,10 @@ export default function LandingPage({ onNavigate }) {
 
           {/* STEP 2 */}
           <div className="bg-[#150f23] border border-[#362d59] rounded-2xl p-7 flex flex-col gap-4 relative overflow-hidden">
-            <div className="w-10 h-10 rounded-xl bg-[#1f1633] border border-[#362d59] text-sm font-mono font-bold grid place-items-center text-[#c2ef4e]">
+            <div className="w-10 h-10 rounded-xl bg-[#1f1633] border border-[#362d59] text-sm font-sans font-bold grid place-items-center text-[#c2ef4e]">
               02
             </div>
-            <h3 className="text-lg font-bold text-[#ffffff] m-0">Our robot inspects it</h3>
+            <h3 className="text-lg font-bold text-[#ffffff] m-0">Our AI inspects it</h3>
             <p className="text-sm text-[#bdb8c0] leading-relaxed m-0 font-normal">
               In one second, the computer reads every letter, checks if the photo was glued or changed, and looks at the face.
             </p>
@@ -199,7 +199,7 @@ export default function LandingPage({ onNavigate }) {
 
           {/* STEP 3 */}
           <div className="bg-[#150f23] border border-[#362d59] rounded-2xl p-7 flex flex-col gap-4 relative overflow-hidden">
-            <div className="w-10 h-10 rounded-xl bg-[#1f1633] border border-[#362d59] text-sm font-mono font-bold grid place-items-center text-[#c2ef4e]">
+            <div className="w-10 h-10 rounded-xl bg-[#1f1633] border border-[#362d59] text-sm font-sans font-bold grid place-items-center text-[#c2ef4e]">
               03
             </div>
             <h3 className="text-lg font-bold text-[#ffffff] m-0">Green light means safe!</h3>
@@ -210,14 +210,14 @@ export default function LandingPage({ onNavigate }) {
         </div>
       </section>
 
-      {/* WHAT OUR ROBOT DOES (3 FORENSIC PILLARS) */}
+      {/* WHAT OUR AI DOES (3 FORENSIC PILLARS) */}
       <section className="flex flex-col gap-8">
         <div className="flex flex-col gap-2">
-          <div className="text-xs font-mono uppercase tracking-[0.25px] text-[#79628c]">
-            CORE CAPABILITIES // ROBOT ENGINE
+          <div className="text-xs font-semibold uppercase tracking-wider text-[#79628c]">
+            Built-In Verification Powers
           </div>
           <h2 className="text-[28px] sm:text-[38px] font-bold text-[#ffffff] m-0">
-            What Our Robot Does
+            What Our AI Does
           </h2>
           <p className="text-sm sm:text-base text-[#bdb8c0] m-0 font-normal">
             Three superpowers in one box.
@@ -227,7 +227,7 @@ export default function LandingPage({ onNavigate }) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* PILLAR 1 */}
           <div className="bg-[#150f23] border border-[#362d59] rounded-2xl p-7 flex flex-col gap-4">
-            <span className="text-[11px] font-mono text-[#79628c]">PILLAR 01 // TEXT</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#79628c]">Feature 01 • Text Reading</span>
             <h3 className="text-lg font-bold text-[#ffffff] m-0">Reading Words (OCR)</h3>
             <p className="text-sm text-[#bdb8c0] leading-relaxed m-0 font-normal">
               Our computer reads the name, birth date, and ID numbers off the card. You don't have to type anything by hand ever again.
@@ -236,7 +236,7 @@ export default function LandingPage({ onNavigate }) {
 
           {/* PILLAR 2 */}
           <div className="bg-[#150f23] border border-[#362d59] rounded-2xl p-7 flex flex-col gap-4">
-            <span className="text-[11px] font-mono text-[#79628c]">PILLAR 02 // SPLICING</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#79628c]">Feature 02 • Tamper Detection</span>
             <h3 className="text-lg font-bold text-[#ffffff] m-0">Catching Trick Photos</h3>
             <p className="text-sm text-[#bdb8c0] leading-relaxed m-0 font-normal">
               If bad actors try to glue a new picture or change the birth year on Photoshop, our computer sees the secret cuts and rings the alarm.
@@ -245,7 +245,7 @@ export default function LandingPage({ onNavigate }) {
 
           {/* PILLAR 3 */}
           <div className="bg-[#150f23] border border-[#362d59] rounded-2xl p-7 flex flex-col gap-4">
-            <span className="text-[11px] font-mono text-[#79628c]">PILLAR 03 // BIOMETRICS</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#79628c]">Feature 03 • Face Verification</span>
             <h3 className="text-lg font-bold text-[#ffffff] m-0">Matching Faces</h3>
             <p className="text-sm text-[#bdb8c0] leading-relaxed m-0 font-normal">
               We compare the photo on the card with the real person standing right in front of you. 100% private: we never save your selfies.
@@ -261,7 +261,7 @@ export default function LandingPage({ onNavigate }) {
             Ready to test a card right now?
           </h2>
           <p className="text-sm sm:text-base text-[#bdb8c0] m-0 font-normal leading-relaxed">
-            It takes 2 seconds and costs nothing to try. Upload a picture and watch the robot do its magic.
+            It takes 2 seconds and costs nothing to try. Upload a picture and watch our AI verify it instantly.
           </p>
         </div>
         <button

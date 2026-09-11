@@ -33,7 +33,7 @@ export default function VerifyPage({
           Check Any Government <span className="chip-lime-keyword">ID Card</span>
         </h1>
         <p className="text-sm md:text-base text-[#bdb8c0] max-w-[680px] mt-2 font-normal leading-relaxed">
-          Upload two pictures: the government plastic card and a selfie photo. Our robot checks if the numbers are real, if the photo was changed, and if the faces match.
+          Upload two pictures: the government plastic card and a selfie photo. Our AI checks if the numbers are real, if the photo was changed, and if the faces match.
         </p>
       </div>
 
@@ -102,7 +102,7 @@ export default function VerifyPage({
             disabled={isVerifying || !documentFile || !livePhotoFile}
             className="btn-inverted flex items-center gap-2"
           >
-            <span>{isVerifying ? 'Robot Checking Card...' : 'Verify This ID Now'}</span>
+            <span>{isVerifying ? 'AI Verifying ID...' : 'Verify This ID Now'}</span>
             <ArrowRight size={16} />
           </button>
         </div>
@@ -114,10 +114,10 @@ export default function VerifyPage({
           <div className="h-8 w-8 animate-spin rounded-full border-3 border-[#362d59] border-t-[#c2ef4e]" />
           <div>
             <h3 className="text-base font-semibold text-[#ffffff] m-0">
-              Checking the ID with AI robot...
+              Analyzing ID with intelligent AI models...
             </h3>
             <p className="text-xs text-[#bdb8c0] mt-1 font-normal">
-              Reading the printed words, looking for altered photos, and checking the face match.
+              Reading printed words, running forensic tampering checks, and executing biometric facial match.
             </p>
           </div>
         </section>
@@ -140,12 +140,12 @@ export default function VerifyPage({
               )}
               <div>
                 <h2 className="text-xl md:text-2xl font-bold text-[#ffffff] m-0">
-                  {isAuth ? 'Real ID — Safe to Let In!' : 'Warning — This ID Looks Fake or Altered!'}
+                  {isAuth ? 'Real ID — Verified Authentic!' : 'Warning — Document Flagged for Review!'}
                 </h2>
                 <p className="text-xs text-[#bdb8c0] mt-1 font-normal">
                   {isAuth
-                    ? 'All security checks passed. The card is genuine and the faces match.'
-                    : 'Our robot detected problems with this card. Please do not accept it without manual inspection.'}
+                    ? 'All security checks passed. The card is genuine and the biometric face matches.'
+                    : 'Our AI detected anomalies with this document. Please review forensic details below.'}
                 </p>
               </div>
             </div>
@@ -157,18 +157,24 @@ export default function VerifyPage({
             </div>
           </div>
 
-          {/* 4 SIMPLE INSPECTION CARDS */}
+          {/* 4 HIGH-LEVEL INSPECTION CARDS */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-[#150f23] border border-[#362d59] rounded-xl p-5 flex flex-col gap-2">
-              <div className="text-xs font-semibold uppercase tracking-[0.2px] text-[#79628c]">Words on Card</div>
-              <div className="text-base font-bold text-[#ffffff]">Read 100% Clearly</div>
-              <div className="text-xs text-[#c2ef4e]">✓ Letters matched</div>
+              <div className="text-xs font-semibold uppercase tracking-[0.2px] text-[#79628c]">OCR Text Extraction</div>
+              <div className="text-base font-bold text-[#ffffff]">
+                {verificationResult.modules?.ocr?.ocr_confidence ? `${Math.round(verificationResult.modules.ocr.ocr_confidence)}% Confidence` : 'Text Parsed'}
+              </div>
+              <div className="text-xs text-[#c2ef4e]">✓ Characters digitized</div>
             </div>
 
             <div className="bg-[#150f23] border border-[#362d59] rounded-xl p-5 flex flex-col gap-2">
-              <div className="text-xs font-semibold uppercase tracking-[0.2px] text-[#79628c]">Photo Tampering</div>
-              <div className="text-base font-bold text-[#ffffff]">Original Photo</div>
-              <div className="text-xs text-[#c2ef4e]">✓ Zero glue or edits</div>
+              <div className="text-xs font-semibold uppercase tracking-[0.2px] text-[#79628c]">Forensic Tampering</div>
+              <div className="text-base font-bold text-[#ffffff]">
+                {verificationResult.modules?.tampering?.is_tampered ? 'Tampering Detected' : 'Original Photo'}
+              </div>
+              <div className={`text-xs ${verificationResult.modules?.tampering?.is_tampered ? 'text-[#fa7faa]' : 'text-[#c2ef4e]'}`}>
+                {verificationResult.modules?.tampering?.is_tampered ? '⚠ Splicing / Glitch found' : '✓ ELA & Noise consistent'}
+              </div>
             </div>
 
             <div className="bg-[#150f23] border border-[#362d59] rounded-xl p-5 flex flex-col gap-2">
@@ -178,28 +184,80 @@ export default function VerifyPage({
             </div>
 
             <div className="bg-[#150f23] border border-[#362d59] rounded-xl p-5 flex flex-col gap-2">
-              <div className="text-xs font-semibold uppercase tracking-[0.2px] text-[#79628c]">Face Comparison</div>
+              <div className="text-xs font-semibold uppercase tracking-[0.2px] text-[#79628c]">Biometric Match</div>
               <div className="text-base font-bold text-[#c2ef4e] font-mono">{formatPercentage(faceScore)} Match</div>
-              <div className="text-xs text-[#bdb8c0]">{faceStatus || 'Same person'}</div>
+              <div className="text-xs text-[#bdb8c0]">{faceStatus || 'Biometric verified'}</div>
             </div>
           </div>
 
-          {/* EXTRACTED INFORMATION */}
-          {extractedInfoRows && extractedInfoRows.length > 0 && (
-            <div className="bg-[#150f23] border border-[#362d59] rounded-xl p-6">
-              <h3 className="text-sm font-semibold uppercase tracking-[0.2px] text-[#79628c] mb-4">
-                What the Robot Read from the Card
-              </h3>
-              <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3 m-0">
-                {extractedInfoRows.map((row) => (
-                  <div key={row.field} className="flex items-baseline justify-between border-b border-[#362d59] pb-2">
-                    <dt className="text-xs text-[#79628c]">{row.field}</dt>
-                    <dd className="m-0 font-mono text-xs text-[#ffffff] font-semibold">{row.value}</dd>
-                  </div>
-                ))}
-              </dl>
+          {/* INITIAL VERSION FORENSICS METRICS SUITE */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* EXTRACTED INFORMATION (6 cols) */}
+            <div className="lg:col-span-6 bg-[#150f23] border border-[#362d59] rounded-xl p-6 flex flex-col gap-4">
+              <div className="flex items-center justify-between border-b border-[#362d59] pb-3">
+                <span className="text-xs font-semibold uppercase tracking-[0.2px] text-[#79628c]">
+                  Extracted Card Data &amp; Identity Info
+                </span>
+                <span className="text-xs text-[#c2ef4e] font-semibold">OCR v2.1</span>
+              </div>
+              {extractedInfoRows && extractedInfoRows.length > 0 ? (
+                <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 m-0">
+                  {extractedInfoRows.map((row) => (
+                    <div key={row.field} className="flex items-baseline justify-between border-b border-[#362d59]/60 pb-2">
+                      <dt className="text-xs text-[#79628c]">{row.field}</dt>
+                      <dd className="m-0 font-mono text-xs text-[#ffffff] font-semibold truncate max-w-[140px]">{row.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              ) : (
+                <p className="text-xs text-[#bdb8c0] m-0">Document digitized and verified against security rules.</p>
+              )}
             </div>
-          )}
+
+            {/* FORENSIC RISK BREAKDOWN & TAMPERING (6 cols) */}
+            <div className="lg:col-span-6 bg-[#150f23] border border-[#362d59] rounded-xl p-6 flex flex-col gap-4">
+              <div className="flex items-center justify-between border-b border-[#362d59] pb-3">
+                <span className="text-xs font-semibold uppercase tracking-[0.2px] text-[#79628c]">
+                  Forensic Tampering &amp; Risk Breakdown
+                </span>
+                <span className={`text-xs font-semibold ${isAuth ? 'text-[#c2ef4e]' : 'text-[#fa7faa]'}`}>
+                  Score: {formatScore(riskScore)} / 100
+                </span>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <div>
+                  <div className="flex justify-between text-xs mb-1">
+                    <span className="text-[#bdb8c0]">Document Format &amp; Rule Risk</span>
+                    <span className="font-mono text-[#ffffff]">{verificationResult.riskBreakdown?.validation_risk ?? 0}%</span>
+                  </div>
+                  <div className="w-full h-2 rounded-full bg-[#1f1633] overflow-hidden border border-[#362d59]">
+                    <div className="h-full bg-[#79628c]" style={{ width: `${Math.min(100, verificationResult.riskBreakdown?.validation_risk ?? 0)}%` }} />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between text-xs mb-1">
+                    <span className="text-[#bdb8c0]">Digital Tampering &amp; Splicing Anomaly</span>
+                    <span className="font-mono text-[#ffffff]">{verificationResult.riskBreakdown?.tampering_risk ?? (verificationResult.modules?.tampering?.tamper_score ?? 0)}%</span>
+                  </div>
+                  <div className="w-full h-2 rounded-full bg-[#1f1633] overflow-hidden border border-[#362d59]">
+                    <div className="h-full bg-[#c2ef4e]" style={{ width: `${Math.min(100, (verificationResult.riskBreakdown?.tampering_risk ?? verificationResult.modules?.tampering?.tamper_score ?? 0) * 10)}%` }} />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between text-xs mb-1">
+                    <span className="text-[#bdb8c0]">Biometric Facial Mismatch Risk</span>
+                    <span className="font-mono text-[#ffffff]">{verificationResult.riskBreakdown?.face_match_risk ?? (100 - (faceScore ?? 100))}%</span>
+                  </div>
+                  <div className="w-full h-2 rounded-full bg-[#1f1633] overflow-hidden border border-[#362d59]">
+                    <div className="h-full bg-[#fa7faa]" style={{ width: `${Math.min(100, verificationResult.riskBreakdown?.face_match_risk ?? (100 - (faceScore ?? 100)))}%` }} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* COMPLETE TECHNICAL JSON ACCORDION */}
           <details className="mt-2">

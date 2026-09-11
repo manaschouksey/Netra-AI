@@ -23,7 +23,7 @@ export default function DocsPage({ onNavigate }) {
         <div>
           <h2 className="text-xl font-bold text-[#ffffff] m-0">The 3 Color Signals (Super Easy!)</h2>
           <p className="text-xs text-[#bdb8c0] mt-1 m-0">
-            Whenever our robot checks an ID, it gives you one of these three simple lights:
+            Whenever our AI checks an ID, it gives you one of these three simple lights:
           </p>
         </div>
 
@@ -76,7 +76,7 @@ export default function DocsPage({ onNavigate }) {
         </div>
 
         <div className="rounded-md border border-[#362d59] bg-[#1f1633] p-4 text-xs font-mono overflow-x-auto text-[#ffffff]">
-          <div className="text-[#79628c] mb-2">// 1. Send the government card and selfie to our endpoint</div>
+          <div className="text-[#79628c] mb-2 font-sans font-medium text-[11px] uppercase tracking-wider">Step 1 • Send government card and selfie to endpoint</div>
           <div><span className="text-[#fa7faa]">const</span> formData = <span className="text-[#fa7faa]">new</span> FormData();</div>
           <div>formData.append(<span className="text-[#c2ef4e]">"document"</span>, idCardFile);</div>
           <div>formData.append(<span className="text-[#c2ef4e]">"live_photo"</span>, selfieFile);</div>
@@ -87,7 +87,7 @@ export default function DocsPage({ onNavigate }) {
           <div>&#125;);</div>
           <br />
           <div><span className="text-[#fa7faa]">const</span> data = <span className="text-[#fa7faa]">await</span> res.json();</div>
-          <div className="text-[#c2ef4e]">console.log(data.status); // Output: "AUTHENTIC" or "REJECT"</div>
+          <div className="text-[#c2ef4e]">console.log(data.status); &rarr; "AUTHENTIC" or "REJECT"</div>
         </div>
       </section>
 
@@ -96,7 +96,7 @@ export default function DocsPage({ onNavigate }) {
         <div>
           <h2 className="text-xl font-bold text-[#ffffff] m-0">What Government IDs Are Supported?</h2>
           <p className="text-xs text-[#bdb8c0] mt-1 m-0">
-            Our robot knows how to read all standard government documents:
+            Our AI accurately parses all standard government documents:
           </p>
         </div>
 
