@@ -1,0 +1,23 @@
+{
+  "name": "netra-trustid-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NETRA / TrustID AI — Verification Console & Biometrics Monorepo",
+  "scripts": {
+    "dev:frontend": "npm run dev --prefix frontend",
+    "build:frontend": "npm run build --prefix frontend",
+    "lint:frontend": "npm run lint --prefix frontend",
+    "dev:backend": "cd backend && uvicorn app.main:app --reload --port 8000"
+  },
+  "keywords": [
+    "identity-verification",
+    "face-detection",
+    "ocr",
+    "error-level-analysis",
+    "fastapi",
+    "react",
+    "vite"
+  ],
+  "author": "NETRA AI Team",
+  "license": "MIT"
+}
